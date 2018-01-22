@@ -1,4 +1,13 @@
-﻿namespace BackdropControl
+﻿using System;
+using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
+using System.Text;
+using System.IO;
+using System.Windows.Forms;
+using System.Collections.Generic;
+
+namespace BackdropControl
 {
     partial class Form1
     {
@@ -26,14 +35,379 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
+        /// 
+
+        private void XMLInit()
+        {
+            if (!File.Exists("normalSettings.xml"))
+            {
+                XmlTextWriter writer = new XmlTextWriter("normalSettings.xml", Encoding.UTF8);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartElement("Settings");
+                writer.WriteStartElement("Folder");
+                writer.WriteString(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures).ToString());
+                writer.WriteEndElement();   //Filepath
+                writer.WriteStartElement("Interval");
+                writer.WriteString("0:0:10");
+                writer.WriteEndElement();   //Interval
+                writer.WriteEndElement();   //Normal Settings
+                writer.Close();
+            }
+        }
+
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.BGchange = new System.Windows.Forms.Button();
+            this.BGTimer = new System.Windows.Forms.Timer(this.components);
+            this.filepathLabel = new System.Windows.Forms.Label();
+            this.watcher = new System.IO.FileSystemWatcher();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numMin = new System.Windows.Forms.NumericUpDown();
+            this.numHour = new System.Windows.Forms.NumericUpDown();
+            this.numSec = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.applybutton = new System.Windows.Forms.Button();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.settingsStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.timeLim = new System.Windows.Forms.ToolTip(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.label5 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.presetButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.watcher)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHour)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSec)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // BGchange
+            // 
+            this.BGchange.Location = new System.Drawing.Point(350, 71);
+            this.BGchange.Name = "BGchange";
+            this.BGchange.Size = new System.Drawing.Size(30, 23);
+            this.BGchange.TabIndex = 0;
+            this.BGchange.Text = "...";
+            this.BGchange.UseVisualStyleBackColor = true;
+            this.BGchange.Click += new System.EventHandler(this.BGchange_Click);
+            // 
+            // BGTimer
+            // 
+            this.BGTimer.Tick += new System.EventHandler(this.BGTimer_Tick);
+            // 
+            // filepathLabel
+            // 
+            this.filepathLabel.AutoEllipsis = true;
+            this.filepathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.filepathLabel.Location = new System.Drawing.Point(88, 72);
+            this.filepathLabel.Name = "filepathLabel";
+            this.filepathLabel.Size = new System.Drawing.Size(256, 23);
+            this.filepathLabel.TabIndex = 1;
+            this.filepathLabel.Text = "Path Directory";
+            // 
+            // watcher
+            // 
+            this.watcher.EnableRaisingEvents = true;
+            this.watcher.NotifyFilter = ((System.IO.NotifyFilters)((((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.DirectoryName) 
+            | System.IO.NotifyFilters.LastWrite) 
+            | System.IO.NotifyFilters.LastAccess)));
+            this.watcher.SynchronizingObject = this;
+            this.watcher.Changed += new System.IO.FileSystemEventHandler(this.watcher_Changed);
+            this.watcher.Created += new System.IO.FileSystemEventHandler(this.watcher_Created);
+            this.watcher.Deleted += new System.IO.FileSystemEventHandler(this.watcher_Deleted);
+            this.watcher.Renamed += new System.IO.RenamedEventHandler(this.watcher_Renamed);
+            // 
+            // label2
+            // 
+            this.label2.AutoEllipsis = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(88, 105);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(165, 22);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Time Interval of Change";
+            // 
+            // numMin
+            // 
+            this.numMin.Location = new System.Drawing.Point(425, 105);
+            this.numMin.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.numMin.Name = "numMin";
+            this.numMin.Size = new System.Drawing.Size(43, 22);
+            this.numMin.TabIndex = 5;
+            this.numMin.ValueChanged += new System.EventHandler(this.numMin_ValueChanged);
+            // 
+            // numHour
+            // 
+            this.numHour.Location = new System.Drawing.Point(350, 105);
+            this.numHour.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.numHour.Name = "numHour";
+            this.numHour.Size = new System.Drawing.Size(43, 22);
+            this.numHour.TabIndex = 6;
+            this.numHour.ValueChanged += new System.EventHandler(this.numHour_ValueChanged);
+            // 
+            // numSec
+            // 
+            this.numSec.Location = new System.Drawing.Point(513, 105);
+            this.numSec.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.numSec.Name = "numSec";
+            this.numSec.Size = new System.Drawing.Size(43, 22);
+            this.numSec.TabIndex = 7;
+            this.numSec.ValueChanged += new System.EventHandler(this.numSec_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoEllipsis = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(395, 105);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(24, 22);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "hr";
+            // 
+            // label3
+            // 
+            this.label3.AutoEllipsis = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(472, 105);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 22);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "min";
+            // 
+            // label4
+            // 
+            this.label4.AutoEllipsis = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(562, 105);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(35, 22);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "sec";
+            // 
+            // applybutton
+            // 
+            this.applybutton.Location = new System.Drawing.Point(441, 287);
+            this.applybutton.Name = "applybutton";
+            this.applybutton.Size = new System.Drawing.Size(81, 29);
+            this.applybutton.TabIndex = 12;
+            this.applybutton.Text = "Apply";
+            this.applybutton.UseVisualStyleBackColor = true;
+            this.applybutton.Click += new System.EventHandler(this.applybutton_Click);
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsStrip,
+            this.exitStrip});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(132, 52);
+            // 
+            // settingsStrip
+            // 
+            this.settingsStrip.Name = "settingsStrip";
+            this.settingsStrip.Size = new System.Drawing.Size(131, 24);
+            this.settingsStrip.Text = "Settings";
+            this.settingsStrip.Click += new System.EventHandler(this.settingsStrip_Click);
+            // 
+            // exitStrip
+            // 
+            this.exitStrip.Name = "exitStrip";
+            this.exitStrip.Size = new System.Drawing.Size(131, 24);
+            this.exitStrip.Text = "Exit";
+            this.exitStrip.Click += new System.EventHandler(this.exitStrip_Click);
+            // 
+            // timeLim
+            // 
+            this.timeLim.AutoPopDelay = 2000;
+            this.timeLim.InitialDelay = 200;
+            this.timeLim.IsBalloon = true;
+            this.timeLim.ReshowDelay = 100;
+            this.timeLim.ToolTipTitle = "Value not set";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(528, 287);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(81, 29);
+            this.button1.TabIndex = 13;
+            this.button1.Text = "Cancel";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.cancel_Click);
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Checked = true;
+            this.radioButton1.Location = new System.Drawing.Point(47, 34);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(112, 21);
+            this.radioButton1.TabIndex = 14;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Single Folder";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(47, 147);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(139, 21);
+            this.radioButton2.TabIndex = 15;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "Custom Schedule";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(88, 188);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(112, 18);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Selected Preset";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(350, 188);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(206, 24);
+            this.comboBox1.TabIndex = 17;
+            // 
+            // presetButton
+            // 
+            this.presetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.presetButton.Location = new System.Drawing.Point(441, 218);
+            this.presetButton.Name = "presetButton";
+            this.presetButton.Size = new System.Drawing.Size(115, 28);
+            this.presetButton.TabIndex = 18;
+            this.presetButton.Text = "Edit Presets";
+            this.presetButton.UseVisualStyleBackColor = true;
+            this.presetButton.Click += new System.EventHandler(this.presetButton_Click);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(650, 346);
+            this.Controls.Add(this.presetButton);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.radioButton2);
+            this.Controls.Add(this.radioButton1);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.applybutton);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.numSec);
+            this.Controls.Add(this.numHour);
+            this.Controls.Add(this.numMin);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.filepathLabel);
+            this.Controls.Add(this.BGchange);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "Form1";
+            this.Text = "Wallpaper Changer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.closeForm);
+            ((System.ComponentModel.ISupportInitialize)(this.watcher)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHour)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSec)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        private void loadXML()
+        {
+            XDocument doc = XDocument.Load("normalSettings.xml");
+
+            folderPath = (string)doc.Descendants("Folder").First();
+
+            string[] arr = ((string)(from el in doc.Descendants("Interval") select el).First()).Split(':');
+            this.numHour.Value = new decimal(new int[] { Convert.ToInt32(arr[0]), 0, 0, 0 });
+            this.numMin.Value = new decimal(new int[] { Convert.ToInt32(arr[1]), 0, 0, 0 });
+            this.numSec.Value = new decimal(new int[] { Convert.ToInt32(arr[2]), 0, 0, 0 });
+            this.BGTimer.Interval = (3600000 * Convert.ToInt32(numHour.Value)) + (60000 * Convert.ToInt32(numMin.Value)) + (1000 * Convert.ToInt32(numSec.Value));
+
+            if (folderPath == "" || folderPath == null || !Directory.Exists(folderPath))
+            {
+                this.filepathLabel.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures).ToString();
+                folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures).ToString();
+                var fix = XElement.Load("normalSettings.xml");
+                fix.Element("Folder").Value = folderPath;
+                fix.Save("normalSettings.xml");
+            }
+            else
+            {
+                this.filepathLabel.Text = folderPath;
+            }
+            watcher.Path = folderPath;
+            var filepaths = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
+            foreach (string elem in filepaths)
+            {
+                pictures.Add(elem);
+            }
+            this.applybutton.Enabled = false;
         }
 
         #endregion
+        private System.Windows.Forms.Button BGchange;
+        private System.Windows.Forms.Timer BGTimer;
+        private System.Windows.Forms.Label filepathLabel;
+        private System.IO.FileSystemWatcher watcher;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numSec;
+        private System.Windows.Forms.NumericUpDown numHour;
+        private System.Windows.Forms.NumericUpDown numMin;
+        private System.Windows.Forms.Button applybutton;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem settingsStrip;
+        private System.Windows.Forms.ToolStripMenuItem exitStrip;
+        private ToolTip timeLim;
+        private Button button1;
+        private RadioButton radioButton2;
+        private RadioButton radioButton1;
+        private ComboBox comboBox1;
+        private Label label5;
+        private Button presetButton;
     }
 }
 
