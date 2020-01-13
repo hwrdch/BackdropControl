@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace BackdropControl
 {
-    partial class Form1
+    partial class WallpaperSettings
     {
         /// <summary>
         /// Required designer variable.
@@ -58,7 +58,7 @@ namespace BackdropControl
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WallpaperSettings));
             this.BGchange = new System.Windows.Forms.Button();
             this.BGTimer = new System.Windows.Forms.Timer(this.components);
             this.filepathLabel = new System.Windows.Forms.Label();

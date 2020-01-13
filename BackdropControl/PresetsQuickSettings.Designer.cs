@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace BackdropControl
 {
-    partial class Form2
+    partial class PresetsQuickSettings
     {
         /// <summary>
         /// Required designer variable.
@@ -37,7 +37,7 @@ namespace BackdropControl
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.PresetListBox = new System.Windows.Forms.ListBox();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.CancelButton = new System.Windows.Forms.Button();
             this.ApplyButton = new System.Windows.Forms.Button();
@@ -65,13 +65,13 @@ namespace BackdropControl
             // 
             // listBox1
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(143, 376);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(164, 132);
-            this.listBox1.TabIndex = 0;
-            this.listBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.List1_Click);
+            this.PresetListBox.FormattingEnabled = true;
+            this.PresetListBox.ItemHeight = 16;
+            this.PresetListBox.Location = new System.Drawing.Point(143, 376);
+            this.PresetListBox.Name = "listBox1";
+            this.PresetListBox.Size = new System.Drawing.Size(164, 132);
+            this.PresetListBox.TabIndex = 0;
+            this.PresetListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PresetBox1Click);
             // 
             // listBox2
             // 
@@ -143,7 +143,7 @@ namespace BackdropControl
             this.addPresetToolStripMenuItem.Name = "addPresetToolStripMenuItem";
             this.addPresetToolStripMenuItem.Size = new System.Drawing.Size(150, 24);
             this.addPresetToolStripMenuItem.Text = "Add Preset";
-            this.addPresetToolStripMenuItem.Click += new EventHandler(this.addToolStripMenuItem1_Click);
+            this.addPresetToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem1_Click);
             // 
             // PresetEditMenu
             // 
@@ -179,7 +179,7 @@ namespace BackdropControl
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(106, 24);
             this.toolStripMenuItem1.Text = "Add";
-            this.toolStripMenuItem1.Click += new EventHandler(addToolStripMenuItem1_Click);
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.addToolStripMenuItem1_Click);
             // 
             // editMenu
             // 
@@ -220,9 +220,9 @@ namespace BackdropControl
             this.listBox3.Name = "listBox3";
             this.listBox3.Size = new System.Drawing.Size(110, 132);
             this.listBox3.TabIndex = 10;
-            this.listBox3.MouseUp += new MouseEventHandler(this.List3_Click);
+            this.listBox3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.List3_Click);
             // 
-            // Form2
+            // PresetsQuickSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -235,9 +235,9 @@ namespace BackdropControl
             this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.listBox2);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.PresetListBox);
             this.Controls.Add(this.BGPreview);
-            this.Name = "Form2";
+            this.Name = "PresetsQuickSettings";
             this.Text = "Form2";
             ((System.ComponentModel.ISupportInitialize)(this.BGPreview)).EndInit();
             this.AddPreset.ResumeLayout(false);
@@ -251,7 +251,7 @@ namespace BackdropControl
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox PresetListBox;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button ApplyButton;

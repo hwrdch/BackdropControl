@@ -6,24 +6,25 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using BackdropControl.Resources;
 
 namespace BackdropControl
 {
-    public partial class Form2 : Form
+    public partial class PresetsQuickSettings : Form
     {
-        List<List<string>> presets = new List<List<string>>();
-        public Form2()
+        List<BackgroundPreset> presets = new List<BackgroundPreset>();
+        public PresetsQuickSettings()
         {
             InitializeComponent();
             PresetInit();
         }
         public void PresetInit()
         {
-            if (!File.Exists("presetNames.xml"))
+            if (!File.Exists("BackdropControlPresets.xml"))
             {
-                XmlTextWriter writer = new XmlTextWriter("presetNames.xml", Encoding.UTF8);
+                XmlTextWriter writer = new XmlTextWriter("BackdropControlPresets.xml", Encoding.UTF8);
                 writer.Formatting = Formatting.Indented;
-                writer.WriteStartElement("root");
+                writer.WriteStartElement("BCPresets");
                 writer.WriteEndElement();
                 writer.Close();
             }
@@ -31,12 +32,14 @@ namespace BackdropControl
             else
             {
                 XmlDocument doc = new XmlDocument();        //collect and locally store presets from file
-                doc.Load("presetNames.xml");
+                doc.Load("BackdropControlPresets.xml");     //presets each have their own files
                 XmlElement root = doc.DocumentElement;
                 XmlNodeList nodes = doc.DocumentElement.SelectNodes("Preset");
+                BackgroundPreset LoadedPreset = new BackgroundPreset();
+
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    presets.Add(new List<string>());
+                    presets.Add(new BackgroundPreset());
                     presets[i].Add(nodes[i]["Name"].InnerText); //load preset name
 
                     XmlNodeList paths = nodes[i].SelectNodes("Path");   //load preset's picture paths
@@ -50,45 +53,44 @@ namespace BackdropControl
                 //no need to alphabetize list when loading XML because it should already be sorted
                 for (int i = 0; i < presets.Count(); i++)
                 {
-                    listBox1.Items.Add(presets[i][0]);
+                    PresetListBox.Items.Add(presets[i][0]);
                 }
             }
+           // PresetListBox.Items.Add(new List<List<string>>());
         }
-        private void List1_Click(object sender, MouseEventArgs e)
+        private void PresetBox1Click(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (e.Y > listBox1.Items.Count * listBox1.ItemHeight)
+                if (e.Y > PresetListBox.Items.Count * PresetListBox.ItemHeight)
                 {
-                    listBox1.ClearSelected();
+                    PresetListBox.ClearSelected();
                     AddPreset.Show(Cursor.Position);
                 }
                 else
                 {
-                    listBox1.SelectedIndex = listBox1.IndexFromPoint(e.X, e.Y);
+                    PresetListBox.SelectedIndex = PresetListBox.IndexFromPoint(e.X, e.Y);
                     PresetEditMenu.Show(Cursor.Position);
                 }
             }
             else
             {
-                if (e.Y <= listBox1.Items.Count * listBox1.ItemHeight)
+                if (e.Y <= PresetListBox.Items.Count * PresetListBox.ItemHeight)
                 {
                     listBox2.Items.Clear();
                     listBox3.Items.Clear();
-                    if (listBox1.SelectedIndex != -1)
-                        for (int i = 1; i < presets[listBox1.SelectedIndex].Count(); i += 2)
+                    if (PresetListBox.SelectedIndex != -1)
+                    {
+                        for (int i = 1; i<presets[PresetListBox.SelectedIndex].Count(); i += 2)
                         {
-                            listBox2.Items.Add(
-                                                presets[listBox1.SelectedIndex][i]
-                                              );
-                            listBox3.Items.Add(
-                                                presets[listBox1.SelectedIndex][i+1]
-                                              );
+                            listBox2.Items.Add(presets[PresetListBox.SelectedIndex][i]);
+                            listBox3.Items.Add(presets[PresetListBox.SelectedIndex][i + 1]);
                         }
+                    }
                 }
                 else
                 {
-                    listBox1.ClearSelected();
+                    PresetListBox.ClearSelected();
                 }
             }
         }
@@ -107,11 +109,11 @@ namespace BackdropControl
                     listBox2.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
                     listBox3.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
 
-                    string selectedPicturePath = presets[listBox1.SelectedIndex][1 + listBox2.SelectedIndex * 2];
+                    string selectedPicturePath = presets[PresetListBox.SelectedIndex][1 + listBox2.SelectedIndex * 2];
                     string selectedPicture = selectedPicturePath.Substring(selectedPicturePath.LastIndexOf("\\") + 1);
                     Directory.SetCurrentDirectory(selectedPicturePath.Substring(0, selectedPicturePath.Length - selectedPicture.Length - 1));
                     BGPreview.Image = Image.FromFile(selectedPicture);
-                    timeStr.Text = TimeConvert(presets[listBox1.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
+                    timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
                     pictureName.Text = selectedPicture;
 
                     editMenu.Show(Cursor.Position);
@@ -128,11 +130,11 @@ namespace BackdropControl
                 {
                     listBox2.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
                     listBox3.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-                    string selectedPicturePath = presets[listBox1.SelectedIndex][1 + listBox2.SelectedIndex * 2];
+                    string selectedPicturePath = presets[PresetListBox.SelectedIndex][1 + listBox2.SelectedIndex * 2];
                     string selectedPicture = selectedPicturePath.Substring(selectedPicturePath.LastIndexOf("\\") + 1);
                     Directory.SetCurrentDirectory(selectedPicturePath.Substring(0, selectedPicturePath.Length - selectedPicture.Length - 1));
                     BGPreview.Image = Image.FromFile(selectedPicture);
-                    timeStr.Text = TimeConvert(presets[listBox1.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
+                    timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
                     pictureName.Text = selectedPicture;
                 }
             }
@@ -152,11 +154,11 @@ namespace BackdropControl
                     listBox2.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
                     listBox3.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
 
-                    string selectedPicturePath = presets[listBox1.SelectedIndex][1 + listBox2.SelectedIndex * 2];
+                    string selectedPicturePath = presets[PresetListBox.SelectedIndex][1 + listBox2.SelectedIndex * 2];
                     string selectedPicture = selectedPicturePath.Substring(selectedPicturePath.LastIndexOf("\\") + 1);
                     Directory.SetCurrentDirectory(selectedPicturePath.Substring(0, selectedPicturePath.Length - selectedPicture.Length - 1));
                     BGPreview.Image = Image.FromFile(selectedPicture);
-                    timeStr.Text = TimeConvert(presets[listBox1.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
+                    timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
                     pictureName.Text = selectedPicture;
 
                     editMenu.Show(Cursor.Position);
@@ -173,11 +175,11 @@ namespace BackdropControl
                 {
                     listBox2.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
                     listBox3.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-                    string selectedPicturePath = presets[listBox1.SelectedIndex][1 + listBox2.SelectedIndex * 2];
+                    string selectedPicturePath = presets[PresetListBox.SelectedIndex][1 + listBox2.SelectedIndex * 2];
                     string selectedPicture = selectedPicturePath.Substring(selectedPicturePath.LastIndexOf("\\") + 1);
                     Directory.SetCurrentDirectory(selectedPicturePath.Substring(0, selectedPicturePath.Length - selectedPicture.Length - 1));
                     BGPreview.Image = Image.FromFile(selectedPicture);
-                    timeStr.Text = TimeConvert(presets[listBox1.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
+                    timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
                     pictureName.Text = selectedPicture;
                 }
             }
@@ -220,7 +222,7 @@ namespace BackdropControl
             PresetName f3 = new PresetName();
             f3.ShowDialog();
             string result = f3.textname;
-            listBox1.Items.Add(result);
+            PresetListBox.Items.Add(result);
 
             if (f3.presetCreated)
             { 
@@ -233,23 +235,24 @@ namespace BackdropControl
         private void EditToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<string> check = new List<string>();    //pass into form to check if time already exists
-            for (int i = 2; i < presets[listBox1.SelectedIndex].Count; i += 2)
+            for (int i = 2; i < presets[PresetListBox.SelectedIndex].Count; i += 2)
             {
-                check.Add(presets[listBox1.SelectedIndex][i]);
+                check.Add(presets[PresetListBox.SelectedIndex][i]);
                 System.Diagnostics.Debug.WriteLine(check[check.Count - 1]);
             }
-            PresetEditForm PresetForm = new PresetEditForm(presets[listBox1.SelectedIndex][2 * (listBox2.SelectedIndex) + 1], presets[listBox1.SelectedIndex][2 * (listBox2.SelectedIndex) + 2], check);
+            PresetEditForm PresetForm = new PresetEditForm(presets[PresetListBox.SelectedIndex][2 * (listBox2.SelectedIndex) + 1], presets[PresetListBox.SelectedIndex][2 * (listBox2.SelectedIndex) + 2], check);
             PresetForm.ShowDialog();
 
             string newTime = PresetForm.TimeValue;  //get new data, close form and clean resources
             string newPath = PresetForm.NewPath;
+
             PresetForm.Dispose();
 
-            presets[listBox1.SelectedIndex].Add(newPath);
-            presets[listBox1.SelectedIndex].Add(newTime);
+            presets[PresetListBox.SelectedIndex].Add(newPath);
+            presets[PresetListBox.SelectedIndex].Add(newTime);
 
-            for (int i = 0; i < presets[listBox1.SelectedIndex].Count; i++)
-                System.Diagnostics.Debug.WriteLine(presets[listBox1.SelectedIndex][i]);
+            for (int i = 0; i < presets[PresetListBox.SelectedIndex].Count; i++)
+                System.Diagnostics.Debug.WriteLine(presets[PresetListBox.SelectedIndex][i]);
         }
     }
 }

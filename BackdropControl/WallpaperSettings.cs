@@ -10,14 +10,14 @@ using System.Runtime.InteropServices;
 
 namespace BackdropControl
 {
-    public partial class Form1 : Form
+    public partial class WallpaperSettings : Form
     {
         private string folderPath;
         private string oldFolderPath;
         private List<string> pictures;
         private int iter;
 
-        public Form1()
+        public WallpaperSettings()
         {
             pictures = new List<string>();
             iter = 0;
@@ -313,7 +313,7 @@ namespace BackdropControl
 
         private void presetButton_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2();
+            PresetsQuickSettings f2 = new PresetsQuickSettings();
             f2.ShowDialog();
         }
     }
