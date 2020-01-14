@@ -39,7 +39,7 @@ namespace BackdropControl
 
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    presets.Add(new BackgroundPreset());
+                    LoadedPreset.AddPreset(new BackgroundPresetEntry());
                     presets[i].Add(nodes[i]["Name"].InnerText); //load preset name
 
                     XmlNodeList paths = nodes[i].SelectNodes("Path");   //load preset's picture paths
