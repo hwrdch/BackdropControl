@@ -12,7 +12,6 @@ namespace BackdropControl
 {
     public partial class PresetsQuickSettings : Form
     {
-        List<BackgroundPreset> presets = new List<BackgroundPreset>();
         public PresetsQuickSettings()
         {
             InitializeComponent();
@@ -20,6 +19,7 @@ namespace BackdropControl
         }
         public void PresetInit()
         {
+            ListOfPresets = new List<BackgroundPreset>();
             if (!Directory.Exists(DEFAULT_PRESET_PATH))
             {
                 Directory.CreateDirectory(DEFAULT_PRESET_PATH);
@@ -32,65 +32,57 @@ namespace BackdropControl
 
             else
             {
-                foreach(string path in Directory.GetFiles(DEFAULT_PRESET_PATH))
+                foreach(string path in Directory.GetFiles(DEFAULT_PRESET_PATH, "*.xml"))
                 { 
                     XmlDocument doc = new XmlDocument();        //collect and locally store presets from file
                     doc.Load(path);     //presets each have their own files
                     XmlElement root = doc.DocumentElement;
                     XmlNodeList nodes = doc.DocumentElement.SelectNodes("PresetEntry");
-                    BackgroundPreset LoadedPreset = new BackgroundPreset();
+                    BackgroundPreset LoadedPreset = new BackgroundPreset(Path.GetFileName(DEFAULT_PRESET_PATH));
 
                     for (int i = 0; i < nodes.Count; i++)
                     {
                         LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["Path"].InnerText, DateTime.Parse(nodes[i]["Time"].InnerText))); //load preset name
                     }
-                    //no need to alphabetize list when loading XML because it should already be sorted
-                }
-                foreach (string )
-                {
-                    PresetListBox.Items.Add(presets[i][0]);
+                    ListOfPresets.Add(LoadedPreset);
                 }
             }
-           // PresetListBox.Items.Add(new List<List<string>>());
         }
         private void PresetBox1Click(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (e.Y > PresetListBox.Items.Count * PresetListBox.ItemHeight)
+                if (PresetListBox.SelectedItem != null)
                 {
-                    PresetListBox.ClearSelected();
-                    AddPreset.Show(Cursor.Position);
+                    RightClickRenameMenuItem.Enabled = true;
+                    RightClickDeleteMenuItem.Enabled = true;
                 }
-                else
-                {
-                    PresetListBox.SelectedIndex = PresetListBox.IndexFromPoint(e.X, e.Y);
-                    PresetEditMenu.Show(Cursor.Position);
-                }
+
+                PresetEditMenu.Show(Cursor.Position);
             }
-            else
-            {
-                if (e.Y <= PresetListBox.Items.Count * PresetListBox.ItemHeight)
-                {
-                    listBox2.Items.Clear();
-                    listBox3.Items.Clear();
-                    if (PresetListBox.SelectedIndex != -1)
-                    {
-                        for (int i = 1; i<presets[PresetListBox.SelectedIndex].Count(); i += 2)
-                        {
-                            listBox2.Items.Add(presets[PresetListBox.SelectedIndex][i]);
-                            listBox3.Items.Add(presets[PresetListBox.SelectedIndex][i + 1]);
-                        }
-                    }
-                }
-                else
-                {
-                    PresetListBox.ClearSelected();
-                }
-            }
+            //else
+            //{
+            //    if (e.Y <= PresetListBox.Items.Count * PresetListBox.ItemHeight)
+            //    {
+            //        listBox2.Items.Clear();
+            //        listBox3.Items.Clear();
+            //        if (PresetListBox.SelectedIndex != -1)
+            //        {
+            //            for (int i = 1; i<presets[PresetListBox.SelectedIndex].Count(); i += 2)
+            //            {
+            //                listBox2.Items.Add(presets[PresetListBox.SelectedIndex][i]);
+            //                listBox3.Items.Add(presets[PresetListBox.SelectedIndex][i + 1]);
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        PresetListBox.ClearSelected();
+            //    }
+            //}
         }
         private void List2_Click(object sender, MouseEventArgs e)
-        {
+        {/*
             if (e.Button == MouseButtons.Right)
             {
                 if (e.Y > listBox2.Items.Count * listBox2.ItemHeight)
@@ -132,10 +124,10 @@ namespace BackdropControl
                     timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
                     pictureName.Text = selectedPicture;
                 }
-            }
+            }*/
         }
         private void List3_Click(object sender, MouseEventArgs e)
-        {
+        {/*
             if (e.Button == MouseButtons.Right)
             {
                 if (e.Y > listBox2.Items.Count * listBox2.ItemHeight)
@@ -177,7 +169,7 @@ namespace BackdropControl
                     timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
                     pictureName.Text = selectedPicture;
                 }
-            }
+            }*/
         }
         private string TimeConvert(string v)
         {
@@ -212,23 +204,8 @@ namespace BackdropControl
             }
         }
 
-        private void addToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            PresetName f3 = new PresetName();
-            f3.ShowDialog();
-            string result = f3.textname;
-            PresetListBox.Items.Add(result);
-
-            if (f3.presetCreated)
-            { 
-                presets.Add(new List<string>());
-                presets[presets.Count - 1].Add(result);
-            }
-
-            f3.Dispose();
-        }
         private void EditToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        {/*
             List<string> check = new List<string>();    //pass into form to check if time already exists
             for (int i = 2; i < presets[PresetListBox.SelectedIndex].Count; i += 2)
             {
@@ -247,8 +224,37 @@ namespace BackdropControl
             presets[PresetListBox.SelectedIndex].Add(newTime);
 
             for (int i = 0; i < presets[PresetListBox.SelectedIndex].Count; i++)
-                System.Diagnostics.Debug.WriteLine(presets[PresetListBox.SelectedIndex][i]);
+                System.Diagnostics.Debug.WriteLine(presets[PresetListBox.SelectedIndex][i]);*/
         }
-        public string DEFAULT_PRESET_PATH;
+
+
+        public string DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl Presets");
+        public List<BackgroundPreset> ListOfPresets;
+
+        private void RightClickAddPreset(object sender, EventArgs e)
+        {
+            PresetListBox.Items.Add(AddNewPresetTextBox);
+            AddNewPresetTextBox.Enabled = true;
+            AddNewPresetTextBox.Visible = true;
+        }
+
+        private void AddNewPresetName(object sender, KeyEventArgs e)
+        {
+            if (e.Key = Keys.Enter)
+            {
+                PresetListBox.Items.Remove(AddNewPresetTextBox);
+                PresetListBox.Items.Add(new BackgroundPreset(AddNewPresetTextBox.Text)); 
+            }
+        }
+
+        private void RightClickRenamePreset(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("RENAMED PRESET");
+        }
+
+        private void RightClickDeletePreset(object sender, EventArgs e)
+        {
+
+        }
     }
 }

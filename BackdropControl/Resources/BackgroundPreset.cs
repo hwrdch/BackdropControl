@@ -14,6 +14,12 @@ namespace BackdropControl.Resources
             get { return _PresetName; }
             set { _PresetName = value; }
         }
+
+        public BackgroundPreset(string s)
+        {
+            _PresetName = s;
+        }
+
         private List<BackgroundPresetEntry> _PresetEntries;
         public List<BackgroundPresetEntry> PresetEntries
         {
@@ -32,6 +38,11 @@ namespace BackdropControl.Resources
             {
                 PresetEntries[i].PresetIndex -= 1;
             }
+        }
+
+        public bool IsPresetEmpty()
+        {
+            return PresetEntries.Count == 0;
         }
     }
 }

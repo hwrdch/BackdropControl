@@ -66,12 +66,6 @@
     <Compile Include="PresetEditForm.Designer.cs">
       <DependentUpon>PresetEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PresetName.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PresetName.Designer.cs">
-      <DependentUpon>PresetName.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="WallpaperSettings.resx">

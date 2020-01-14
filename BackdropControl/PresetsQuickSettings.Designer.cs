@@ -47,28 +47,24 @@ namespace BackdropControl
             this.AddPreset = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PresetEditMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.editMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.RightClickAddMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RightClickRenameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RightClickDeleteMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureName = new System.Windows.Forms.Label();
             this.timeStr = new System.Windows.Forms.Label();
             this.listBox3 = new System.Windows.Forms.ListBox();
+            this.AddNewPresetTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.BGPreview)).BeginInit();
             this.AddPreset.SuspendLayout();
             this.PresetEditMenu.SuspendLayout();
-            this.addMenu.SuspendLayout();
-            this.editMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // listBox1
+            // PresetListBox
             // 
             this.PresetListBox.FormattingEnabled = true;
             this.PresetListBox.ItemHeight = 16;
             this.PresetListBox.Location = new System.Drawing.Point(143, 376);
-            this.PresetListBox.Name = "listBox1";
+            this.PresetListBox.Name = "PresetListBox";
             this.PresetListBox.Size = new System.Drawing.Size(164, 132);
             this.PresetListBox.TabIndex = 0;
             this.PresetListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PresetBox1Click);
@@ -136,64 +132,45 @@ namespace BackdropControl
             this.AddPreset.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addPresetToolStripMenuItem});
             this.AddPreset.Name = "AddPreset";
-            this.AddPreset.Size = new System.Drawing.Size(151, 28);
+            this.AddPreset.Size = new System.Drawing.Size(70, 26);
             // 
             // addPresetToolStripMenuItem
             // 
             this.addPresetToolStripMenuItem.Name = "addPresetToolStripMenuItem";
-            this.addPresetToolStripMenuItem.Size = new System.Drawing.Size(150, 24);
-            this.addPresetToolStripMenuItem.Text = "Add Preset";
-            this.addPresetToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem1_Click);
+            this.addPresetToolStripMenuItem.Size = new System.Drawing.Size(69, 22);
             // 
             // PresetEditMenu
             // 
             this.PresetEditMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.PresetEditMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renameToolStripMenuItem,
-            this.deleteToolStripMenuItem});
+            this.RightClickAddMenuItem,
+            this.RightClickRenameMenuItem,
+            this.RightClickDeleteMenuItem});
             this.PresetEditMenu.Name = "PresetEditMenu";
-            this.PresetEditMenu.Size = new System.Drawing.Size(123, 52);
+            this.PresetEditMenu.Size = new System.Drawing.Size(151, 76);
             // 
-            // renameToolStripMenuItem
+            // RightClickAddMenuItem
             // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(122, 24);
-            this.renameToolStripMenuItem.Text = "Edit";
+            this.RightClickAddMenuItem.Name = "RightClickAddMenuItem";
+            this.RightClickAddMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.RightClickAddMenuItem.Text = "Add Preset";
+            this.RightClickAddMenuItem.Click += new System.EventHandler(this.RightClickAddPreset);
             // 
-            // deleteToolStripMenuItem
+            // RightClickRenameMenuItem
             // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(122, 24);
-            this.deleteToolStripMenuItem.Text = "Delete";
+            this.RightClickRenameMenuItem.Enabled = false;
+            this.RightClickRenameMenuItem.Name = "RightClickRenameMenuItem";
+            this.RightClickRenameMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.RightClickRenameMenuItem.Text = "Rename...";
+            this.RightClickRenameMenuItem.Click += new System.EventHandler(this.RightClickRenamePreset);
             // 
-            // addMenu
+            // RightClickDeleteMenuItem
             // 
-            this.addMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.addMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
-            this.addMenu.Name = "AddPreset";
-            this.addMenu.Size = new System.Drawing.Size(107, 28);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(106, 24);
-            this.toolStripMenuItem1.Text = "Add";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.addToolStripMenuItem1_Click);
-            // 
-            // editMenu
-            // 
-            this.editMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.editMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2});
-            this.editMenu.Name = "AddPreset";
-            this.editMenu.Size = new System.Drawing.Size(123, 28);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(122, 24);
-            this.toolStripMenuItem2.Text = "Delete";
+            this.RightClickDeleteMenuItem.Enabled = false;
+            this.RightClickDeleteMenuItem.Name = "RightClickDeleteMenuItem";
+            this.RightClickDeleteMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.RightClickDeleteMenuItem.Text = "Delete...";
+            this.RightClickDeleteMenuItem.Click += new System.EventHandler(this.RightClickDeletePreset);
             // 
             // pictureName
             // 
@@ -222,11 +199,21 @@ namespace BackdropControl
             this.listBox3.TabIndex = 10;
             this.listBox3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.List3_Click);
             // 
+            // textBox1
+            // 
+            this.AddNewPresetTextBox.Location = new System.Drawing.Point(143, 376);
+            this.AddNewPresetTextBox.Name = "textBox1";
+            this.AddNewPresetTextBox.Size = new System.Drawing.Size(164, 22);
+            this.AddNewPresetTextBox.TabIndex = 11;
+            this.AddNewPresetTextBox.Visible = false;
+            this.AddNewPresetTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddNewPresetName);
+            // 
             // PresetsQuickSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 513);
+            this.Controls.Add(this.AddNewPresetTextBox);
             this.Controls.Add(this.listBox3);
             this.Controls.Add(this.timeStr);
             this.Controls.Add(this.pictureName);
@@ -242,8 +229,6 @@ namespace BackdropControl
             ((System.ComponentModel.ISupportInitialize)(this.BGPreview)).EndInit();
             this.AddPreset.ResumeLayout(false);
             this.PresetEditMenu.ResumeLayout(false);
-            this.addMenu.ResumeLayout(false);
-            this.editMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -261,14 +246,12 @@ namespace BackdropControl
         private System.Windows.Forms.ContextMenuStrip AddPreset;
         private System.Windows.Forms.ToolStripMenuItem addPresetToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip PresetEditMenu;
-        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip addMenu;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ContextMenuStrip editMenu;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem RightClickRenameMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RightClickDeleteMenuItem;
         private Label pictureName;
         private Label timeStr;
         private ListBox listBox3;
+        private ToolStripMenuItem RightClickAddMenuItem;
+        private TextBox AddNewPresetTextBox;
     }
 }
