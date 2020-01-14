@@ -21,7 +21,7 @@ namespace BackdropControl.Resources
             set { _PresetEntries = value; }
         }
 
-        public void AddPreset(BackgroundPresetEntry entry)
+        public void AddPresetEntry(BackgroundPresetEntry entry)
         {
             _PresetEntries.Add(entry);
         }

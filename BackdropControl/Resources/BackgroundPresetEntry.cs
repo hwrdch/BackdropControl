@@ -8,9 +8,15 @@ namespace BackdropControl.Resources
 {
     public class BackgroundPresetEntry
     {
-        public BackgroundPresetEntry (string s, DateTime dt)
+        public BackgroundPresetEntry()
         {
-
+            _DirectoryPath = string.Empty;
+            TimeOfChange = DateTime.MinValue;
+        }
+        public BackgroundPresetEntry (string path, DateTime dt)
+        {
+            _DirectoryPath = path;
+            TimeOfChange = dt;
         }
 
         private string _DirectoryPath;

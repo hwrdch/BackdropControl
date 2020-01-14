@@ -20,38 +20,33 @@ namespace BackdropControl
         }
         public void PresetInit()
         {
-            if (!File.Exists("BackdropControlPresets.xml"))
+            if (!Directory.Exists(DEFAULT_PRESET_PATH))
             {
-                XmlTextWriter writer = new XmlTextWriter("BackdropControlPresets.xml", Encoding.UTF8);
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartElement("BCPresets");
-                writer.WriteEndElement();
-                writer.Close();
+                Directory.CreateDirectory(DEFAULT_PRESET_PATH);
+                //XmlTextWriter writer = new XmlTextWriter("BackdropControlPresets.xml", Encoding.UTF8);
+                //writer.Formatting = Formatting.Indented;
+                //writer.WriteStartElement("BCPresets");
+                //writer.WriteEndElement();
+                //writer.Close();
             }
 
             else
             {
-                XmlDocument doc = new XmlDocument();        //collect and locally store presets from file
-                doc.Load("BackdropControlPresets.xml");     //presets each have their own files
-                XmlElement root = doc.DocumentElement;
-                XmlNodeList nodes = doc.DocumentElement.SelectNodes("Preset");
-                BackgroundPreset LoadedPreset = new BackgroundPreset();
+                foreach(string path in Directory.GetFiles(DEFAULT_PRESET_PATH))
+                { 
+                    XmlDocument doc = new XmlDocument();        //collect and locally store presets from file
+                    doc.Load(path);     //presets each have their own files
+                    XmlElement root = doc.DocumentElement;
+                    XmlNodeList nodes = doc.DocumentElement.SelectNodes("PresetEntry");
+                    BackgroundPreset LoadedPreset = new BackgroundPreset();
 
-                for (int i = 0; i < nodes.Count; i++)
-                {
-                    LoadedPreset.AddPreset(new BackgroundPresetEntry());
-                    presets[i].Add(nodes[i]["Name"].InnerText); //load preset name
-
-                    XmlNodeList paths = nodes[i].SelectNodes("Path");   //load preset's picture paths
-                    XmlNodeList times = nodes[i].SelectNodes("Time");
-                    for (int j = 0; j < paths.Count; j++)
+                    for (int i = 0; i < nodes.Count; i++)
                     {
-                        presets[i].Add(paths[j].InnerText);
-                        presets[i].Add(times[j].InnerText);
+                        LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["Path"].InnerText, DateTime.Parse(nodes[i]["Time"].InnerText))); //load preset name
                     }
+                    //no need to alphabetize list when loading XML because it should already be sorted
                 }
-                //no need to alphabetize list when loading XML because it should already be sorted
-                for (int i = 0; i < presets.Count(); i++)
+                foreach (string )
                 {
                     PresetListBox.Items.Add(presets[i][0]);
                 }
@@ -254,5 +249,6 @@ namespace BackdropControl
             for (int i = 0; i < presets[PresetListBox.SelectedIndex].Count; i++)
                 System.Diagnostics.Debug.WriteLine(presets[PresetListBox.SelectedIndex][i]);
         }
+        public string DEFAULT_PRESET_PATH;
     }
 }
