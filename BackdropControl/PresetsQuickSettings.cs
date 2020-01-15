@@ -19,7 +19,7 @@ namespace BackdropControl
         }
         public void PresetInit()
         {
-            ListOfPresets = new List<BackgroundPreset>();
+            ListOfLoadedPresets = new List<BackgroundPreset>();
             if (!Directory.Exists(DEFAULT_PRESET_PATH))
             {
                 Directory.CreateDirectory(DEFAULT_PRESET_PATH);
@@ -44,10 +44,11 @@ namespace BackdropControl
                     {
                         LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["Path"].InnerText, DateTime.Parse(nodes[i]["Time"].InnerText))); //load preset name
                     }
-                    ListOfPresets.Add(LoadedPreset);
+                    ListOfLoadedPresets.Add(LoadedPreset);
                     PresetListBox.Items.Add(LoadedPreset);
                 }
             }
+            LastUsedPictureFolderDirectory = DEFAULT_PRESET_PATH;
         }
         private void PresetBox1Click(object sender, MouseEventArgs e)
         {
@@ -59,8 +60,17 @@ namespace BackdropControl
                     RightClickDeleteMenuItem.Enabled = true;
                 }
 
-                PresetEditMenu.Show(Cursor.Position);
+                AddEditDeletePresetMenu.Show(Cursor.Position);
             }
+
+            SelectedPresetPicturesListBox.Items.Clear();
+            if (ListOfLoadedPresets.Count > 0)
+            {
+                foreach (BackgroundPresetEntry entry in ListOfLoadedPresets.First
+                        (match => match.PresetName == ((BackgroundPreset)PresetListBox.SelectedItem).PresetName).PresetEntries)
+                    SelectedPresetPicturesListBox.Items.Add(entry); 
+            }
+
             //else
             //{
             //    if (e.Y <= PresetListBox.Items.Count * PresetListBox.ItemHeight)
@@ -82,95 +92,9 @@ namespace BackdropControl
             //    }
             //}
         }
-        private void List2_Click(object sender, MouseEventArgs e)
-        {/*
-            if (e.Button == MouseButtons.Right)
-            {
-                if (e.Y > listBox2.Items.Count * listBox2.ItemHeight)
-                {
-                    listBox2.ClearSelected();
-                    listBox3.ClearSelected();
-                    addMenu.Show(Cursor.Position);
-                }
-                else
-                {
-                    listBox2.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-                    listBox3.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-
-                    string selectedPicturePath = presets[PresetListBox.SelectedIndex][1 + listBox2.SelectedIndex * 2];
-                    string selectedPicture = selectedPicturePath.Substring(selectedPicturePath.LastIndexOf("\\") + 1);
-                    Directory.SetCurrentDirectory(selectedPicturePath.Substring(0, selectedPicturePath.Length - selectedPicture.Length - 1));
-                    BGPreview.Image = Image.FromFile(selectedPicture);
-                    timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
-                    pictureName.Text = selectedPicture;
-
-                    editMenu.Show(Cursor.Position);
-                }
-            }
-            else
-            {
-                if (e.Y > listBox2.Items.Count * listBox2.ItemHeight)
-                {
-                    listBox2.ClearSelected();
-                    listBox3.ClearSelected();
-                }
-                else
-                {
-                    listBox2.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-                    listBox3.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-                    string selectedPicturePath = presets[PresetListBox.SelectedIndex][1 + listBox2.SelectedIndex * 2];
-                    string selectedPicture = selectedPicturePath.Substring(selectedPicturePath.LastIndexOf("\\") + 1);
-                    Directory.SetCurrentDirectory(selectedPicturePath.Substring(0, selectedPicturePath.Length - selectedPicture.Length - 1));
-                    BGPreview.Image = Image.FromFile(selectedPicture);
-                    timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
-                    pictureName.Text = selectedPicture;
-                }
-            }*/
-        }
-        private void List3_Click(object sender, MouseEventArgs e)
-        {/*
-            if (e.Button == MouseButtons.Right)
-            {
-                if (e.Y > listBox2.Items.Count * listBox2.ItemHeight)
-                {
-                    listBox2.ClearSelected();
-                    listBox3.ClearSelected();
-                    addMenu.Show(Cursor.Position);
-                }
-                else
-                {
-                    listBox2.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-                    listBox3.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-
-                    string selectedPicturePath = presets[PresetListBox.SelectedIndex][1 + listBox2.SelectedIndex * 2];
-                    string selectedPicture = selectedPicturePath.Substring(selectedPicturePath.LastIndexOf("\\") + 1);
-                    Directory.SetCurrentDirectory(selectedPicturePath.Substring(0, selectedPicturePath.Length - selectedPicture.Length - 1));
-                    BGPreview.Image = Image.FromFile(selectedPicture);
-                    timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
-                    pictureName.Text = selectedPicture;
-
-                    editMenu.Show(Cursor.Position);
-                }
-            }
-            else
-            {
-                if (e.Y > listBox2.Items.Count * listBox2.ItemHeight)
-                {
-                    listBox2.ClearSelected();
-                    listBox3.ClearSelected();
-                }
-                else
-                {
-                    listBox2.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-                    listBox3.SelectedIndex = listBox2.IndexFromPoint(e.X, e.Y);
-                    string selectedPicturePath = presets[PresetListBox.SelectedIndex][1 + listBox2.SelectedIndex * 2];
-                    string selectedPicture = selectedPicturePath.Substring(selectedPicturePath.LastIndexOf("\\") + 1);
-                    Directory.SetCurrentDirectory(selectedPicturePath.Substring(0, selectedPicturePath.Length - selectedPicture.Length - 1));
-                    BGPreview.Image = Image.FromFile(selectedPicture);
-                    timeStr.Text = TimeConvert(presets[PresetListBox.SelectedIndex][2 + listBox2.SelectedIndex * 2]);
-                    pictureName.Text = selectedPicture;
-                }
-            }*/
+        private void SelectedPresetEntryEvent(object sender, MouseEventArgs e)
+        {
+            
         }
         private string TimeConvert(string v)
         {
@@ -205,34 +129,7 @@ namespace BackdropControl
             }
         }
 
-        private void EditToolStripMenuItem_Click(object sender, EventArgs e)
-        {/*
-            List<string> check = new List<string>();    //pass into form to check if time already exists
-            for (int i = 2; i < presets[PresetListBox.SelectedIndex].Count; i += 2)
-            {
-                check.Add(presets[PresetListBox.SelectedIndex][i]);
-                System.Diagnostics.Debug.WriteLine(check[check.Count - 1]);
-            }
-            PresetEditForm PresetForm = new PresetEditForm(presets[PresetListBox.SelectedIndex][2 * (listBox2.SelectedIndex) + 1], presets[PresetListBox.SelectedIndex][2 * (listBox2.SelectedIndex) + 2], check);
-            PresetForm.ShowDialog();
-
-            string newTime = PresetForm.TimeValue;  //get new data, close form and clean resources
-            string newPath = PresetForm.NewPath;
-
-            PresetForm.Dispose();
-
-            presets[PresetListBox.SelectedIndex].Add(newPath);
-            presets[PresetListBox.SelectedIndex].Add(newTime);
-
-            for (int i = 0; i < presets[PresetListBox.SelectedIndex].Count; i++)
-                System.Diagnostics.Debug.WriteLine(presets[PresetListBox.SelectedIndex][i]);*/
-        }
-
-
-        public string DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl Presets");
-        public List<BackgroundPreset> ListOfPresets;
-
-        private void RightClickAddPreset(object sender, EventArgs e)
+        private void RightClick1AddPreset(object sender, EventArgs e)
         {
             PresetListBox.Items.Insert(0, AddNewPresetTextBox);
             AddNewPresetTextBox.Enabled = true;
@@ -251,21 +148,108 @@ namespace BackdropControl
                     string PresetName = AddNewPresetTextBox.Text;
 
                     AddNewPresetTextBox.Visible = false;
-                    PresetListBox.Items.Insert(0, new BackgroundPreset(PresetName));
+                    PresetListBox.Items.Insert(1, new BackgroundPreset(PresetName));
 
                     AddNewPresetTextBox.Text = string.Empty;
+                    PresetListBox.Items.RemoveAt(0);
+                    PresetListBox.SetSelected(0, true);
                 }
-                PresetListBox.Items.RemoveAt(0);
+                else
+                {
+                    AddNewPresetTextBox.Visible = false;
+                    PresetListBox.Items.RemoveAt(0); 
+                }
+            }
+        }
+        private void RenamePresetName(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == 13)
+            {
+                if (!string.IsNullOrWhiteSpace(RenamePresetBox.Text) || !string.IsNullOrEmpty(RenamePresetBox.Text))
+                {
+                    BackgroundPreset preset = (BackgroundPreset)PresetListBox.SelectedItem;
+                    string PresetName = RenamePresetBox.Text;
+                    int SelectedPresetIndex = PresetListBox.SelectedIndex;
+                    RenamePresetBox.Visible = false;
+
+                    preset.PresetName = PresetName;
+                    PresetListBox.Items.RemoveAt(SelectedPresetIndex);
+                    PresetListBox.Items.Insert(SelectedPresetIndex, preset);
+                    RenamePresetBox.Text = string.Empty;
+                }
+                else
+                {
+                    RenamePresetBox.Visible = false;
+                }
             }
         }
 
-        private void RightClickRenamePreset(object sender, EventArgs e)
+        private void RightClick1RenamePreset(object sender, EventArgs e)
         {
-            AddNewPresetTextBox.Text = ((BackgroundPreset)PresetListBox.SelectedItem).PresetName;
-            PresetListBox.SelectedItem = AddNewPresetTextBox;
+            RenamePresetBox.Text = ((BackgroundPreset)PresetListBox.SelectedItem).PresetName;
+            PresetListBox.SelectedItem = RenamePresetBox;
+
+            this.RenamePresetBox.SelectionStart = 0;
+            this.RenamePresetBox.SelectionLength = RenamePresetBox.Text.Length;
+            RenamePresetBox.Visible = true;
+
+            this.ActiveControl = RenamePresetBox;
         }
 
-        private void RightClickDeletePreset(object sender, EventArgs e)
+        private void RightClick1DeletePreset(object sender, EventArgs e)
+        {
+            PresetListBox.Items.RemoveAt(PresetListBox.SelectedIndex);
+        }
+
+        public string DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl Presets");
+        public List<BackgroundPreset> ListOfLoadedPresets;
+        public string LastUsedPictureFolderDirectory;
+
+        private void PresetBox2RightClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (SelectedPresetPicturesListBox.SelectedItem != null)
+                {
+                    EditWallpaperMenuItem.Enabled = true;
+                    EditDateTimeMenuItem.Enabled = true;
+                    DeleteWallpaperMenuItem.Enabled = true;
+                }
+                EditPresetMenu.Show(Cursor.Position);
+            }
+        }
+
+        private void EditPresetLostFocusEvent(object sender, EventArgs e)
+        {
+            EditWallpaperMenuItem.Enabled = false;
+            EditDateTimeMenuItem.Enabled = false;
+            DeleteWallpaperMenuItem.Enabled = false;
+        }
+
+        private void RightClick2AddWallpaper(object sender, EventArgs e)
+        {
+            OpenFileDialog f = new OpenFileDialog();
+            f.InitialDirectory = LastUsedPictureFolderDirectory;
+            f.Filter = "Image Files(*.jpg; *.jpeg; *.png; *.bmp)|*.jpg; *.jpeg; *.png; *.bmp";
+
+            if (f.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SelectedPresetPicturesListBox.Items.Add((Path.GetFileName(f.FileName)));
+                //ListOfLoadedPresets.Add
+            }
+        }
+
+        private void RightClick2EditWallpaper(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RightClick2EditDateTime(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RightClick2DeleteWallpaper(object sender, EventArgs e)
         {
 
         }

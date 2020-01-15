@@ -30,7 +30,7 @@ namespace BackdropControl
                 BGTimer.Enabled = true;
         }
 
-        private void BGchange_Click(object sender, EventArgs e)
+        private void BackgroundDirectoryChangeEvent(object sender, EventArgs e)
         {
             FolderBrowserDialog f = new FolderBrowserDialog();
             f.RootFolder = Environment.SpecialFolder.Desktop;

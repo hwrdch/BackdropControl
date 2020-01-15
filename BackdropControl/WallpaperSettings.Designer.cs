@@ -97,7 +97,7 @@ namespace BackdropControl
             this.BGchange.TabIndex = 0;
             this.BGchange.Text = "...";
             this.BGchange.UseVisualStyleBackColor = true;
-            this.BGchange.Click += new System.EventHandler(this.BGchange_Click);
+            this.BGchange.Click += new System.EventHandler(this.BackgroundDirectoryChangeEvent);
             // 
             // BGTimer
             // 

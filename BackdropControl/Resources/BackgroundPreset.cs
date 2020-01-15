@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,6 +44,14 @@ namespace BackdropControl.Resources
         public bool IsPresetEmpty()
         {
             return PresetEntries.Count == 0;
+        }
+
+        public List<string> GetPresetEntryNames()
+        {
+            List<string> list = new List<string>();
+            foreach (BackgroundPresetEntry entry in _PresetEntries)
+                list.Add(Path.GetFileName(entry.DirectoryPath));
+            return list;
         }
     }
 }
