@@ -61,6 +61,7 @@ namespace BackdropControl
             // 
             // PresetListBox
             // 
+            this.PresetListBox.DisplayMember = "((BackgroundPreset)this).PresetName";
             this.PresetListBox.FormattingEnabled = true;
             this.PresetListBox.ItemHeight = 16;
             this.PresetListBox.Location = new System.Drawing.Point(143, 376);
@@ -152,7 +153,7 @@ namespace BackdropControl
             // RightClickAddMenuItem
             // 
             this.RightClickAddMenuItem.Name = "RightClickAddMenuItem";
-            this.RightClickAddMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.RightClickAddMenuItem.Size = new System.Drawing.Size(150, 24);
             this.RightClickAddMenuItem.Text = "Add Preset";
             this.RightClickAddMenuItem.Click += new System.EventHandler(this.RightClickAddPreset);
             // 
@@ -160,7 +161,7 @@ namespace BackdropControl
             // 
             this.RightClickRenameMenuItem.Enabled = false;
             this.RightClickRenameMenuItem.Name = "RightClickRenameMenuItem";
-            this.RightClickRenameMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.RightClickRenameMenuItem.Size = new System.Drawing.Size(150, 24);
             this.RightClickRenameMenuItem.Text = "Rename...";
             this.RightClickRenameMenuItem.Click += new System.EventHandler(this.RightClickRenamePreset);
             // 
@@ -168,7 +169,7 @@ namespace BackdropControl
             // 
             this.RightClickDeleteMenuItem.Enabled = false;
             this.RightClickDeleteMenuItem.Name = "RightClickDeleteMenuItem";
-            this.RightClickDeleteMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.RightClickDeleteMenuItem.Size = new System.Drawing.Size(150, 24);
             this.RightClickDeleteMenuItem.Text = "Delete...";
             this.RightClickDeleteMenuItem.Click += new System.EventHandler(this.RightClickDeletePreset);
             // 
@@ -199,10 +200,10 @@ namespace BackdropControl
             this.listBox3.TabIndex = 10;
             this.listBox3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.List3_Click);
             // 
-            // textBox1
+            // AddNewPresetTextBox
             // 
             this.AddNewPresetTextBox.Location = new System.Drawing.Point(143, 376);
-            this.AddNewPresetTextBox.Name = "textBox1";
+            this.AddNewPresetTextBox.Name = "AddNewPresetTextBox";
             this.AddNewPresetTextBox.Size = new System.Drawing.Size(164, 22);
             this.AddNewPresetTextBox.TabIndex = 11;
             this.AddNewPresetTextBox.Visible = false;

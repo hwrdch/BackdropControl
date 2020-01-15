@@ -45,6 +45,7 @@ namespace BackdropControl
                         LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["Path"].InnerText, DateTime.Parse(nodes[i]["Time"].InnerText))); //load preset name
                     }
                     ListOfPresets.Add(LoadedPreset);
+                    PresetListBox.Items.Add(LoadedPreset);
                 }
             }
         }
@@ -233,23 +234,35 @@ namespace BackdropControl
 
         private void RightClickAddPreset(object sender, EventArgs e)
         {
-            PresetListBox.Items.Add(AddNewPresetTextBox);
+            PresetListBox.Items.Insert(0, AddNewPresetTextBox);
             AddNewPresetTextBox.Enabled = true;
             AddNewPresetTextBox.Visible = true;
+            this.ActiveControl = AddNewPresetTextBox;
+
+            AddNewPresetTextBox.Text = string.Empty;
         }
 
         private void AddNewPresetName(object sender, KeyEventArgs e)
         {
-            if (e.Key = Keys.Enter)
+            if (e.KeyValue == 13)
             {
-                PresetListBox.Items.Remove(AddNewPresetTextBox);
-                PresetListBox.Items.Add(new BackgroundPreset(AddNewPresetTextBox.Text)); 
+                if (!string.IsNullOrWhiteSpace(AddNewPresetTextBox.Text) || !string.IsNullOrEmpty(AddNewPresetTextBox.Text))
+                { 
+                    string PresetName = AddNewPresetTextBox.Text;
+
+                    AddNewPresetTextBox.Visible = false;
+                    PresetListBox.Items.Insert(0, new BackgroundPreset(PresetName));
+
+                    AddNewPresetTextBox.Text = string.Empty;
+                }
+                PresetListBox.Items.RemoveAt(0);
             }
         }
 
         private void RightClickRenamePreset(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("RENAMED PRESET");
+            AddNewPresetTextBox.Text = ((BackgroundPreset)PresetListBox.SelectedItem).PresetName;
+            PresetListBox.SelectedItem = AddNewPresetTextBox;
         }
 
         private void RightClickDeletePreset(object sender, EventArgs e)
