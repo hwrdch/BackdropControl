@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ namespace BackdropControl.Resources
         public BackgroundPresetEntry()
         {
             _DirectoryPath = string.Empty;
-            TimeOfChange = DateTime.MinValue;
+            TimeOfChange = TimeSpan.MinValue;
         }
-        public BackgroundPresetEntry (string path, DateTime dt)
+        public BackgroundPresetEntry (string path, TimeSpan dt)
         {
             _DirectoryPath = path;
             TimeOfChange = dt;
@@ -26,18 +27,16 @@ namespace BackdropControl.Resources
             set{ _DirectoryPath = value; }
         }
 
-        private DateTime _TimeOfChange;
-        public DateTime TimeOfChange
+        private TimeSpan _TimeOfChange;
+        public TimeSpan TimeOfChange
         {
             get { return _TimeOfChange; }
             set { _TimeOfChange = value; }
         }
 
-        private int _PresetIndex;
-        public int PresetIndex
+        public string GetPresetEntryFileName()
         {
-            get { return PresetIndex; }
-            set { _PresetIndex = value; }
+            return Path.GetFileNameWithoutExtension(_DirectoryPath);
         }
 
         public bool BackgroundExists()

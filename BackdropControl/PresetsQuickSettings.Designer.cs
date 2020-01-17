@@ -84,8 +84,8 @@ namespace BackdropControl
             this.SelectedPresetPicturesListBox.Name = "SelectedPresetPicturesListBox";
             this.SelectedPresetPicturesListBox.Size = new System.Drawing.Size(342, 108);
             this.SelectedPresetPicturesListBox.TabIndex = 1;
-            this.SelectedPresetPicturesListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PresetBox2RightClick);
             this.SelectedPresetPicturesListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SelectedPresetEntryEvent);
+            this.SelectedPresetPicturesListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PresetBox2RightClick);
             // 
             // CancelButton
             // 
@@ -264,8 +264,6 @@ namespace BackdropControl
             this.RenamePresetBox.TabIndex = 12;
             this.RenamePresetBox.Visible = false;
             this.RenamePresetBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RenamePresetName);
-            this.RenamePresetBox.SelectionStart = 0;
-            this.RenamePresetBox.SelectionLength = RenamePresetBox.Text.Length;
             // 
             // PresetsQuickSettings
             // 
@@ -283,9 +281,10 @@ namespace BackdropControl
             this.Controls.Add(this.SelectedPresetPicturesListBox);
             this.Controls.Add(this.PresetListBox);
             this.Controls.Add(this.BGPreview);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "PresetsQuickSettings";
-            this.Text = "Form2";
+            this.Text = "Presets Settings";
             ((System.ComponentModel.ISupportInitialize)(this.BGPreview)).EndInit();
             this.AddPreset.ResumeLayout(false);
             this.AddEditDeletePresetMenu.ResumeLayout(false);

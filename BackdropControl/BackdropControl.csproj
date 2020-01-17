@@ -45,6 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TimeSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TimeSelectWindow.Designer.cs">
+      <DependentUpon>TimeSelectWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Resources\BackgroundPresetEntry.cs" />
     <Compile Include="Resources\BackgroundStyle.cs" />
     <Compile Include="Resources\BackgroundPreset.cs" />
@@ -68,6 +74,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="TimeSelectWindow.resx">
+      <DependentUpon>TimeSelectWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WallpaperSettings.resx">
       <DependentUpon>WallpaperSettings.cs</DependentUpon>
     </EmbeddedResource>

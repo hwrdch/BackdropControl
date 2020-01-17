@@ -81,7 +81,7 @@ namespace BackdropControl
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.presetButton = new System.Windows.Forms.Button();
+            this.OpenPresetsSettingsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.watcher)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHour)).BeginInit();
@@ -306,21 +306,21 @@ namespace BackdropControl
             // 
             // presetButton
             // 
-            this.presetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.presetButton.Location = new System.Drawing.Point(441, 218);
-            this.presetButton.Name = "presetButton";
-            this.presetButton.Size = new System.Drawing.Size(115, 28);
-            this.presetButton.TabIndex = 18;
-            this.presetButton.Text = "Edit Presets";
-            this.presetButton.UseVisualStyleBackColor = true;
-            this.presetButton.Click += new System.EventHandler(this.presetButton_Click);
+            this.OpenPresetsSettingsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OpenPresetsSettingsButton.Location = new System.Drawing.Point(441, 218);
+            this.OpenPresetsSettingsButton.Name = "presetButton";
+            this.OpenPresetsSettingsButton.Size = new System.Drawing.Size(115, 28);
+            this.OpenPresetsSettingsButton.TabIndex = 18;
+            this.OpenPresetsSettingsButton.Text = "Edit Presets";
+            this.OpenPresetsSettingsButton.UseVisualStyleBackColor = true;
+            this.OpenPresetsSettingsButton.Click += new System.EventHandler(this.OpenPresetsSettingsEvent);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(650, 346);
-            this.Controls.Add(this.presetButton);
+            this.Controls.Add(this.OpenPresetsSettingsButton);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.radioButton2);
@@ -407,7 +407,7 @@ namespace BackdropControl
         private RadioButton radioButton1;
         private ComboBox comboBox1;
         private Label label5;
-        private Button presetButton;
+        private Button OpenPresetsSettingsButton;
     }
 }
 

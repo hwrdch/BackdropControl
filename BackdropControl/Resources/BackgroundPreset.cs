@@ -9,7 +9,7 @@ namespace BackdropControl.Resources
 {
     public class BackgroundPreset
     {
-        private string _PresetName;
+        private string _PresetName = string.Empty;
         public string PresetName
         {
             get { return _PresetName; }
@@ -21,7 +21,7 @@ namespace BackdropControl.Resources
             _PresetName = s;
         }
 
-        private List<BackgroundPresetEntry> _PresetEntries;
+        private List<BackgroundPresetEntry> _PresetEntries = new List<BackgroundPresetEntry>();
         public List<BackgroundPresetEntry> PresetEntries
         {
             get { return _PresetEntries; }
@@ -34,11 +34,11 @@ namespace BackdropControl.Resources
         }
         public void RemovePreset(int index)
         {
-            PresetEntries.RemoveAt(index);
-            for (int i = index; i < PresetEntries.Count(); i++)
-            {
-                PresetEntries[i].PresetIndex -= 1;
-            }
+            //PresetEntries.RemoveAt(index);
+            //for (int i = index; i < PresetEntries.Count(); i++)
+            //{
+            //    PresetEntries[i].PresetIndex -= 1;
+            //}
         }
 
         public bool IsPresetEmpty()
@@ -52,6 +52,11 @@ namespace BackdropControl.Resources
             foreach (BackgroundPresetEntry entry in _PresetEntries)
                 list.Add(Path.GetFileName(entry.DirectoryPath));
             return list;
+        }
+
+        public List<BackgroundPresetEntry> GetPresetEntries()
+        {
+            return PresetEntries;
         }
     }
 }

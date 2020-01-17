@@ -7,11 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using BackdropControl.Resources;
+using System.ComponentModel;
 
 namespace BackdropControl
 {
     public partial class PresetsQuickSettings : Form
     {
+        public string DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl Presets");
+        public BindingList<BackgroundPreset> ListOfLoadedPresets = new BindingList<BackgroundPreset>();
+        public string LastUsedPictureFolderDirectory;
+        public BindingList<BackgroundPresetEntry> DisplayedPresetEntries = new BindingList<BackgroundPresetEntry>();
+        public string HighlightedPresetName = string.Empty;
+
         public PresetsQuickSettings()
         {
             InitializeComponent();
@@ -19,7 +26,6 @@ namespace BackdropControl
         }
         public void PresetInit()
         {
-            ListOfLoadedPresets = new List<BackgroundPreset>();
             if (!Directory.Exists(DEFAULT_PRESET_PATH))
             {
                 Directory.CreateDirectory(DEFAULT_PRESET_PATH);
@@ -42,14 +48,27 @@ namespace BackdropControl
 
                     for (int i = 0; i < nodes.Count; i++)
                     {
-                        LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["Path"].InnerText, DateTime.Parse(nodes[i]["Time"].InnerText))); //load preset name
+                        LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["Path"].InnerText, TimeSpan.Parse(nodes[i]["Time"].InnerText))); //load preset name
                     }
                     ListOfLoadedPresets.Add(LoadedPreset);
-                    PresetListBox.Items.Add(LoadedPreset);
                 }
             }
             LastUsedPictureFolderDirectory = DEFAULT_PRESET_PATH;
+            PresetListBox.DataSource = ListOfLoadedPresets;
+            PresetListBox.DisplayMember = "PresetName";
+            SelectedPresetPicturesListBox.DataSource = DisplayedPresetEntries;
+            SelectedPresetPicturesListBox.DisplayMember = "DirectoryPath";
+
+            this.DisplayedPresetEntries.ListChanged += new ListChangedEventHandler(this.SelectedPresetPicturesChangedEvent);
         }
+
+        private void PresetListChangedEvent(object sender, EventArgs e)
+        {
+            PresetListBox.Items.Clear();
+            foreach (BackgroundPreset bp in ListOfLoadedPresets)
+                PresetListBox.Items.Add(bp);
+        }
+
         private void PresetBox1Click(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -63,38 +82,25 @@ namespace BackdropControl
                 AddEditDeletePresetMenu.Show(Cursor.Position);
             }
 
-            SelectedPresetPicturesListBox.Items.Clear();
-            if (ListOfLoadedPresets.Count > 0)
+            if (PresetListBox.IndexFromPoint(Cursor.Position) != ListBox.NoMatches)
             {
-                foreach (BackgroundPresetEntry entry in ListOfLoadedPresets.First
-                        (match => match.PresetName == ((BackgroundPreset)PresetListBox.SelectedItem).PresetName).PresetEntries)
-                    SelectedPresetPicturesListBox.Items.Add(entry); 
+                HighlightedPresetName = ListOfLoadedPresets[PresetListBox.SelectedIndex].PresetName;
+                SelectedPresetPicturesListBox.Items.Clear();
+                if (ListOfLoadedPresets.Count > 0)
+                {
+                    foreach (BackgroundPresetEntry entry in ListOfLoadedPresets[PresetListBox.SelectedIndex].GetPresetEntries())
+                        SelectedPresetPicturesListBox.Items.Add(entry);
+                } 
             }
-
-            //else
-            //{
-            //    if (e.Y <= PresetListBox.Items.Count * PresetListBox.ItemHeight)
-            //    {
-            //        listBox2.Items.Clear();
-            //        listBox3.Items.Clear();
-            //        if (PresetListBox.SelectedIndex != -1)
-            //        {
-            //            for (int i = 1; i<presets[PresetListBox.SelectedIndex].Count(); i += 2)
-            //            {
-            //                listBox2.Items.Add(presets[PresetListBox.SelectedIndex][i]);
-            //                listBox3.Items.Add(presets[PresetListBox.SelectedIndex][i + 1]);
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        PresetListBox.ClearSelected();
-            //    }
-            //}
         }
         private void SelectedPresetEntryEvent(object sender, MouseEventArgs e)
         {
-            
+                //save for later
+            //if (SelectedPresetPicturesListBox.SelectedItem != null)
+            //{
+            //    BGPreview.ImageLocation = SelectedPresetPicturesListBox.SelectedItem).DirectoryPath;
+            //    BGPreview.SizeMode = PictureBoxSizeMode.AutoSize; 
+            //}
         }
         private string TimeConvert(string v)
         {
@@ -131,12 +137,21 @@ namespace BackdropControl
 
         private void RightClick1AddPreset(object sender, EventArgs e)
         {
-            PresetListBox.Items.Insert(0, AddNewPresetTextBox);
             AddNewPresetTextBox.Enabled = true;
             AddNewPresetTextBox.Visible = true;
             this.ActiveControl = AddNewPresetTextBox;
 
             AddNewPresetTextBox.Text = string.Empty;
+        }
+
+        private void SelectedPresetPicturesChangedEvent(object sender, EventArgs e)
+        {
+            //if (ListOfLoadedPresets.Count > 0)
+            //{
+            //    SelectedPresetPicturesListBox.Items.Clear();
+            //    foreach (BackgroundPreset bp in ListOfLoadedPresets)
+            //        SelectedPresetPicturesListBox.Items.Add(bp); 
+            //}
         }
 
         private void AddNewPresetName(object sender, KeyEventArgs e)
@@ -148,16 +163,15 @@ namespace BackdropControl
                     string PresetName = AddNewPresetTextBox.Text;
 
                     AddNewPresetTextBox.Visible = false;
-                    PresetListBox.Items.Insert(1, new BackgroundPreset(PresetName));
+                    ListOfLoadedPresets.Add(new BackgroundPreset(PresetName));
+                    HighlightedPresetName = AddNewPresetTextBox.Text;
 
                     AddNewPresetTextBox.Text = string.Empty;
-                    PresetListBox.Items.RemoveAt(0);
-                    PresetListBox.SetSelected(0, true);
+                    PresetListBox.SetSelected(PresetListBox.Items.Count - 1, true);
                 }
                 else
                 {
                     AddNewPresetTextBox.Visible = false;
-                    PresetListBox.Items.RemoveAt(0); 
                 }
             }
         }
@@ -201,10 +215,6 @@ namespace BackdropControl
             PresetListBox.Items.RemoveAt(PresetListBox.SelectedIndex);
         }
 
-        public string DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl Presets");
-        public List<BackgroundPreset> ListOfLoadedPresets;
-        public string LastUsedPictureFolderDirectory;
-
         private void PresetBox2RightClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -234,8 +244,29 @@ namespace BackdropControl
 
             if (f.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SelectedPresetPicturesListBox.Items.Add((Path.GetFileName(f.FileName)));
-                //ListOfLoadedPresets.Add
+                //SelectedPresetPicturesListBox.Items.Add((Path.GetFileName(f.FileName)));
+                TimeSelectWindow tsw = new TimeSelectWindow();
+                tsw.ShowDialog();
+
+                BackgroundPresetEntry bpentry = new BackgroundPresetEntry(Path.GetFileName(f.FileName), tsw.TimeOfChange);
+                ListOfLoadedPresets.First(s => s.PresetName == ((BackgroundPreset) PresetListBox.SelectedItem).PresetName).AddPresetEntry(bpentry);
+                
+                if (((BackgroundPreset)(PresetListBox.SelectedItem)).PresetName != HighlightedPresetName)
+                {
+                    DisplayedPresetEntries.Clear();
+                    HighlightedPresetName = ((BackgroundPreset)(PresetListBox.SelectedItem)).PresetName;
+                    BackgroundPreset preset = ListOfLoadedPresets.FirstOrDefault<BackgroundPreset>(
+                        s => s.PresetName == ((BackgroundPreset)PresetListBox.SelectedItem).PresetName);
+                    
+                    foreach (BackgroundPresetEntry entry in preset.GetPresetEntries())
+                    {
+                        DisplayedPresetEntries.Add(entry);
+                    }
+                }
+                
+                DisplayedPresetEntries.Add(bpentry);
+                    //new BindingList<BackgroundPresetEntry>(ListOfLoadedPresets.First(s => s.PresetName == HighlightedPresetName).PresetEntries);
+
             }
         }
 

@@ -271,7 +271,7 @@ namespace BackdropControl
             radioButton2.Checked = true;
             label5.Enabled = true;
             comboBox1.Enabled = true;
-            presetButton.Enabled = true;
+            OpenPresetsSettingsButton.Enabled = true;
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -308,10 +308,10 @@ namespace BackdropControl
             radioButton2.Checked = false;
             label5.Enabled = false;
             comboBox1.Enabled = false;
-            presetButton.Enabled = false;
+            OpenPresetsSettingsButton.Enabled = false;
         }
 
-        private void presetButton_Click(object sender, EventArgs e)
+        private void OpenPresetsSettingsEvent(object sender, EventArgs e)
         {
             PresetsQuickSettings f2 = new PresetsQuickSettings();
             f2.ShowDialog();
