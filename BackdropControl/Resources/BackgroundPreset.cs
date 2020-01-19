@@ -32,8 +32,9 @@ namespace BackdropControl.Resources
         {
             _PresetEntries.Add(entry);
         }
-        public void RemovePreset(int index)
+        public void RemovePreset(string name)
         {
+            PresetEntries.RemoveAll(bp => bp.PictureFileName == name);
             //PresetEntries.RemoveAt(index);
             //for (int i = index; i < PresetEntries.Count(); i++)
             //{
@@ -50,7 +51,7 @@ namespace BackdropControl.Resources
         {
             List<string> list = new List<string>();
             foreach (BackgroundPresetEntry entry in _PresetEntries)
-                list.Add(Path.GetFileName(entry.DirectoryPath));
+                list.Add(entry.PictureFileName);
             return list;
         }
 

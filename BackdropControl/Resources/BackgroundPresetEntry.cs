@@ -18,13 +18,24 @@ namespace BackdropControl.Resources
         {
             _DirectoryPath = path;
             TimeOfChange = dt;
+            _PictureFileName = Path.GetFileName(path);
+        }
+
+        private string _PictureFileName;
+        public string PictureFileName
+        {
+            get { return _PictureFileName; }
+            set { _PictureFileName = value; }
         }
 
         private string _DirectoryPath;
         public string DirectoryPath 
         { 
             get { return _DirectoryPath; }
-            set{ _DirectoryPath = value; }
+            set { 
+                _DirectoryPath = value;
+                _PictureFileName = Path.GetFileName(value);
+            }
         }
 
         private TimeSpan _TimeOfChange;

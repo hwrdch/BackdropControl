@@ -74,6 +74,7 @@ namespace BackdropControl
             this.PresetListBox.Name = "PresetListBox";
             this.PresetListBox.Size = new System.Drawing.Size(124, 108);
             this.PresetListBox.TabIndex = 0;
+            this.PresetListBox.SelectedIndexChanged += new System.EventHandler(this.SelectedPresetChangedEvent);
             this.PresetListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PresetBox1Click);
             // 
             // SelectedPresetPicturesListBox
@@ -81,8 +82,9 @@ namespace BackdropControl
             this.SelectedPresetPicturesListBox.FormattingEnabled = true;
             this.SelectedPresetPicturesListBox.Location = new System.Drawing.Point(235, 306);
             this.SelectedPresetPicturesListBox.Margin = new System.Windows.Forms.Padding(2);
+            this.SelectedPresetPicturesListBox.MultiColumn = true;
             this.SelectedPresetPicturesListBox.Name = "SelectedPresetPicturesListBox";
-            this.SelectedPresetPicturesListBox.Size = new System.Drawing.Size(342, 108);
+            this.SelectedPresetPicturesListBox.Size = new System.Drawing.Size(274, 108);
             this.SelectedPresetPicturesListBox.TabIndex = 1;
             this.SelectedPresetPicturesListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SelectedPresetEntryEvent);
             this.SelectedPresetPicturesListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PresetBox2RightClick);
