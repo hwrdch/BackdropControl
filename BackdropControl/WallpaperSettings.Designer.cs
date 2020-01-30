@@ -91,9 +91,10 @@ namespace BackdropControl
             // 
             // BGchange
             // 
-            this.BGchange.Location = new System.Drawing.Point(350, 71);
+            this.BGchange.Location = new System.Drawing.Point(262, 58);
+            this.BGchange.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.BGchange.Name = "BGchange";
-            this.BGchange.Size = new System.Drawing.Size(30, 23);
+            this.BGchange.Size = new System.Drawing.Size(22, 19);
             this.BGchange.TabIndex = 0;
             this.BGchange.Text = "...";
             this.BGchange.UseVisualStyleBackColor = true;
@@ -107,9 +108,10 @@ namespace BackdropControl
             // 
             this.filepathLabel.AutoEllipsis = true;
             this.filepathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.filepathLabel.Location = new System.Drawing.Point(88, 72);
+            this.filepathLabel.Location = new System.Drawing.Point(66, 58);
+            this.filepathLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.filepathLabel.Name = "filepathLabel";
-            this.filepathLabel.Size = new System.Drawing.Size(256, 23);
+            this.filepathLabel.Size = new System.Drawing.Size(192, 19);
             this.filepathLabel.TabIndex = 1;
             this.filepathLabel.Text = "Path Directory";
             // 
@@ -129,48 +131,52 @@ namespace BackdropControl
             // 
             this.label2.AutoEllipsis = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(88, 105);
+            this.label2.Location = new System.Drawing.Point(66, 85);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(165, 22);
+            this.label2.Size = new System.Drawing.Size(124, 18);
             this.label2.TabIndex = 3;
             this.label2.Text = "Time Interval of Change";
             // 
             // numMin
             // 
-            this.numMin.Location = new System.Drawing.Point(425, 105);
+            this.numMin.Location = new System.Drawing.Point(319, 85);
+            this.numMin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.numMin.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numMin.Name = "numMin";
-            this.numMin.Size = new System.Drawing.Size(43, 22);
+            this.numMin.Size = new System.Drawing.Size(32, 20);
             this.numMin.TabIndex = 5;
             this.numMin.ValueChanged += new System.EventHandler(this.numMin_ValueChanged);
             // 
             // numHour
             // 
-            this.numHour.Location = new System.Drawing.Point(350, 105);
+            this.numHour.Location = new System.Drawing.Point(262, 85);
+            this.numHour.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.numHour.Maximum = new decimal(new int[] {
             23,
             0,
             0,
             0});
             this.numHour.Name = "numHour";
-            this.numHour.Size = new System.Drawing.Size(43, 22);
+            this.numHour.Size = new System.Drawing.Size(32, 20);
             this.numHour.TabIndex = 6;
             this.numHour.ValueChanged += new System.EventHandler(this.numHour_ValueChanged);
             // 
             // numSec
             // 
-            this.numSec.Location = new System.Drawing.Point(513, 105);
+            this.numSec.Location = new System.Drawing.Point(385, 85);
+            this.numSec.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.numSec.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numSec.Name = "numSec";
-            this.numSec.Size = new System.Drawing.Size(43, 22);
+            this.numSec.Size = new System.Drawing.Size(32, 20);
             this.numSec.TabIndex = 7;
             this.numSec.ValueChanged += new System.EventHandler(this.numSec_ValueChanged);
             // 
@@ -178,9 +184,10 @@ namespace BackdropControl
             // 
             this.label1.AutoEllipsis = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(395, 105);
+            this.label1.Location = new System.Drawing.Point(296, 85);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(24, 22);
+            this.label1.Size = new System.Drawing.Size(18, 18);
             this.label1.TabIndex = 8;
             this.label1.Text = "hr";
             // 
@@ -188,9 +195,10 @@ namespace BackdropControl
             // 
             this.label3.AutoEllipsis = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(472, 105);
+            this.label3.Location = new System.Drawing.Point(354, 85);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 22);
+            this.label3.Size = new System.Drawing.Size(26, 18);
             this.label3.TabIndex = 9;
             this.label3.Text = "min";
             // 
@@ -198,17 +206,19 @@ namespace BackdropControl
             // 
             this.label4.AutoEllipsis = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(562, 105);
+            this.label4.Location = new System.Drawing.Point(422, 85);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 22);
+            this.label4.Size = new System.Drawing.Size(26, 18);
             this.label4.TabIndex = 10;
             this.label4.Text = "sec";
             // 
             // applybutton
             // 
-            this.applybutton.Location = new System.Drawing.Point(441, 287);
+            this.applybutton.Location = new System.Drawing.Point(331, 233);
+            this.applybutton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.applybutton.Name = "applybutton";
-            this.applybutton.Size = new System.Drawing.Size(81, 29);
+            this.applybutton.Size = new System.Drawing.Size(61, 24);
             this.applybutton.TabIndex = 12;
             this.applybutton.Text = "Apply";
             this.applybutton.UseVisualStyleBackColor = true;
@@ -228,19 +238,19 @@ namespace BackdropControl
             this.settingsStrip,
             this.exitStrip});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(132, 52);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(117, 48);
             // 
             // settingsStrip
             // 
             this.settingsStrip.Name = "settingsStrip";
-            this.settingsStrip.Size = new System.Drawing.Size(131, 24);
+            this.settingsStrip.Size = new System.Drawing.Size(116, 22);
             this.settingsStrip.Text = "Settings";
             this.settingsStrip.Click += new System.EventHandler(this.settingsStrip_Click);
             // 
             // exitStrip
             // 
             this.exitStrip.Name = "exitStrip";
-            this.exitStrip.Size = new System.Drawing.Size(131, 24);
+            this.exitStrip.Size = new System.Drawing.Size(116, 22);
             this.exitStrip.Text = "Exit";
             this.exitStrip.Click += new System.EventHandler(this.exitStrip_Click);
             // 
@@ -254,9 +264,10 @@ namespace BackdropControl
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(528, 287);
+            this.button1.Location = new System.Drawing.Point(396, 233);
+            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(81, 29);
+            this.button1.Size = new System.Drawing.Size(61, 24);
             this.button1.TabIndex = 13;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
@@ -266,9 +277,10 @@ namespace BackdropControl
             // 
             this.radioButton1.AutoSize = true;
             this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(47, 34);
+            this.radioButton1.Location = new System.Drawing.Point(35, 28);
+            this.radioButton1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(112, 21);
+            this.radioButton1.Size = new System.Drawing.Size(86, 17);
             this.radioButton1.TabIndex = 14;
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Single Folder";
@@ -278,9 +290,10 @@ namespace BackdropControl
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(47, 147);
+            this.radioButton2.Location = new System.Drawing.Point(35, 119);
+            this.radioButton2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(139, 21);
+            this.radioButton2.Size = new System.Drawing.Size(108, 17);
             this.radioButton2.TabIndex = 15;
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "Custom Schedule";
@@ -290,36 +303,39 @@ namespace BackdropControl
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(88, 188);
+            this.label5.Location = new System.Drawing.Point(66, 153);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(112, 18);
+            this.label5.Size = new System.Drawing.Size(93, 15);
             this.label5.TabIndex = 16;
             this.label5.Text = "Selected Preset";
             // 
             // comboBox1
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(350, 188);
+            this.comboBox1.Location = new System.Drawing.Point(262, 153);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox1.MaxDropDownItems = 10;
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(206, 24);
+            this.comboBox1.Size = new System.Drawing.Size(156, 21);
             this.comboBox1.TabIndex = 17;
             // 
-            // presetButton
+            // OpenPresetsSettingsButton
             // 
             this.OpenPresetsSettingsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OpenPresetsSettingsButton.Location = new System.Drawing.Point(441, 218);
-            this.OpenPresetsSettingsButton.Name = "presetButton";
-            this.OpenPresetsSettingsButton.Size = new System.Drawing.Size(115, 28);
+            this.OpenPresetsSettingsButton.Location = new System.Drawing.Point(331, 177);
+            this.OpenPresetsSettingsButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OpenPresetsSettingsButton.Name = "OpenPresetsSettingsButton";
+            this.OpenPresetsSettingsButton.Size = new System.Drawing.Size(86, 23);
             this.OpenPresetsSettingsButton.TabIndex = 18;
             this.OpenPresetsSettingsButton.Text = "Edit Presets";
             this.OpenPresetsSettingsButton.UseVisualStyleBackColor = true;
             this.OpenPresetsSettingsButton.Click += new System.EventHandler(this.OpenPresetsSettingsEvent);
             // 
-            // Form1
+            // WallpaperSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(650, 346);
+            this.ClientSize = new System.Drawing.Size(488, 281);
             this.Controls.Add(this.OpenPresetsSettingsButton);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label5);
@@ -336,9 +352,10 @@ namespace BackdropControl
             this.Controls.Add(this.label2);
             this.Controls.Add(this.filepathLabel);
             this.Controls.Add(this.BGchange);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form1";
+            this.Name = "WallpaperSettings";
             this.Text = "Wallpaper Changer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.closeForm);
             ((System.ComponentModel.ISupportInitialize)(this.watcher)).EndInit();

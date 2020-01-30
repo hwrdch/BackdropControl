@@ -38,7 +38,6 @@ namespace BackdropControl
         {
             this.components = new System.ComponentModel.Container();
             this.PresetListBox = new System.Windows.Forms.ListBox();
-            this.SelectedPresetPicturesListBox = new System.Windows.Forms.ListBox();
             this.CancelButton = new System.Windows.Forms.Button();
             this.ApplyButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -59,6 +58,7 @@ namespace BackdropControl
             this.EditDateTimeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteWallpaperMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RenamePresetBox = new System.Windows.Forms.TextBox();
+            this.SelectedPresetListView = new System.Windows.Forms.ListView();
             ((System.ComponentModel.ISupportInitialize)(this.BGPreview)).BeginInit();
             this.AddPreset.SuspendLayout();
             this.AddEditDeletePresetMenu.SuspendLayout();
@@ -74,20 +74,8 @@ namespace BackdropControl
             this.PresetListBox.Name = "PresetListBox";
             this.PresetListBox.Size = new System.Drawing.Size(124, 108);
             this.PresetListBox.TabIndex = 0;
-            this.PresetListBox.SelectedIndexChanged += new System.EventHandler(this.SelectedPresetChangedEvent);
-            this.PresetListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PresetBox1Click);
-            // 
-            // SelectedPresetPicturesListBox
-            // 
-            this.SelectedPresetPicturesListBox.FormattingEnabled = true;
-            this.SelectedPresetPicturesListBox.Location = new System.Drawing.Point(235, 306);
-            this.SelectedPresetPicturesListBox.Margin = new System.Windows.Forms.Padding(2);
-            this.SelectedPresetPicturesListBox.MultiColumn = true;
-            this.SelectedPresetPicturesListBox.Name = "SelectedPresetPicturesListBox";
-            this.SelectedPresetPicturesListBox.Size = new System.Drawing.Size(274, 108);
-            this.SelectedPresetPicturesListBox.TabIndex = 1;
-            this.SelectedPresetPicturesListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SelectedPresetEntryEvent);
-            this.SelectedPresetPicturesListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PresetBox2RightClick);
+            this.PresetListBox.SelectedValueChanged += new EventHandler(this.PresetBox1SelectionChangedEvent);
+            this.PresetListBox.MouseDown += new MouseEventHandler(this.RightClick1PresetBox);
             // 
             // CancelButton
             // 
@@ -224,7 +212,7 @@ namespace BackdropControl
             this.DeleteWallpaperMenuItem});
             this.EditPresetMenu.Name = "EditPresetMenu";
             this.EditPresetMenu.Size = new System.Drawing.Size(164, 92);
-            this.EditPresetMenu.LostFocus += new System.EventHandler(this.EditPresetLostFocusEvent);
+            this.EditPresetMenu.Closed += new ToolStripDropDownClosedEventHandler(this.EditPresetLostFocusEvent);
             // 
             // AddWallpaperMenuItem
             // 
@@ -267,11 +255,29 @@ namespace BackdropControl
             this.RenamePresetBox.Visible = false;
             this.RenamePresetBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RenamePresetName);
             // 
+            // SelectedPresetListView
+            // 
+            this.SelectedPresetListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.SelectedPresetListView.FullRowSelect = true;
+            this.SelectedPresetListView.GridLines = true;
+            this.SelectedPresetListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.SelectedPresetListView.HideSelection = false;
+            this.SelectedPresetListView.Location = new System.Drawing.Point(236, 306);
+            this.SelectedPresetListView.MultiSelect = false;
+            this.SelectedPresetListView.Name = "SelectedPresetListView";
+            this.SelectedPresetListView.Size = new System.Drawing.Size(340, 108);
+            this.SelectedPresetListView.TabIndex = 13;
+            this.SelectedPresetListView.UseCompatibleStateImageBehavior = false;
+            this.SelectedPresetListView.MouseDown += new MouseEventHandler(this.SelectedPresetListViewRightClick);
+            this.SelectedPresetListView.ColumnWidthChanging += new ColumnWidthChangingEventHandler(this.SelectViewWidthChange);
+            this.SelectedPresetListView.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(this.SelectedPresetChangedEvent);
+            // 
             // PresetsQuickSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(588, 417);
+            this.Controls.Add(this.SelectedPresetListView);
             this.Controls.Add(this.RenamePresetBox);
             this.Controls.Add(this.AddNewPresetTextBox);
             this.Controls.Add(this.timeStr);
@@ -280,7 +286,6 @@ namespace BackdropControl
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.CancelButton);
-            this.Controls.Add(this.SelectedPresetPicturesListBox);
             this.Controls.Add(this.PresetListBox);
             this.Controls.Add(this.BGPreview);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -299,7 +304,6 @@ namespace BackdropControl
         #endregion
 
         private System.Windows.Forms.ListBox PresetListBox;
-        private System.Windows.Forms.ListBox SelectedPresetPicturesListBox;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button ApplyButton;
         private System.Windows.Forms.Label label1;
@@ -320,5 +324,6 @@ namespace BackdropControl
         private ToolStripMenuItem EditWallpaperMenuItem;
         private ToolStripMenuItem EditDateTimeMenuItem;
         private ToolStripMenuItem DeleteWallpaperMenuItem;
+        private ListView SelectedPresetListView;
     }
 }

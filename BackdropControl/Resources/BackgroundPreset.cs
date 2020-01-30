@@ -32,9 +32,39 @@ namespace BackdropControl.Resources
         {
             _PresetEntries.Add(entry);
         }
-        public void RemovePreset(string name)
+
+        public int InsertPresetEntry(BackgroundPresetEntry entry)
         {
-            PresetEntries.RemoveAll(bp => bp.PictureFileName == name);
+            int index = 0;
+
+            if (PresetEntries.Count > 0)
+            {
+                if (PresetEntries.Count == 1)
+                    index = PresetEntries[0].TimeOfChange.TotalSeconds > entry.TimeOfChange.TotalSeconds ? 0 : 1;
+                else if (PresetEntries.Count > 1)
+                    index = PresetEntries.IndexOf(PresetEntries.FirstOrDefault(s => s.TimeOfChange.TotalSeconds > entry.TimeOfChange.TotalSeconds));
+                PresetEntries.Insert(index, entry); 
+            }
+
+            return index;
+        }
+
+        public int EditPresetEntry(BackgroundPresetEntry entry, int index)
+        {
+            for (int i = 0; i < PresetEntries.Count; i++)
+            {
+                if (entry.TimeOfChange.TotalSeconds < PresetEntries[i].TimeOfChange.TotalSeconds)
+                {
+                    PresetEntries[index] = PresetEntries[i];
+                    PresetEntries[i] = entry;
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public void RemovePreset(TimeSpan ts)
+        {
+            PresetEntries.RemoveAll(bp => bp.TimeOfChange == ts);
             //PresetEntries.RemoveAt(index);
             //for (int i = index; i < PresetEntries.Count(); i++)
             //{

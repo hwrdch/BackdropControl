@@ -14,6 +14,7 @@ namespace BackdropControl.Resources
             _DirectoryPath = string.Empty;
             TimeOfChange = TimeSpan.MinValue;
         }
+
         public BackgroundPresetEntry (string path, TimeSpan dt)
         {
             _DirectoryPath = path;
@@ -42,12 +43,28 @@ namespace BackdropControl.Resources
         public TimeSpan TimeOfChange
         {
             get { return _TimeOfChange; }
-            set { _TimeOfChange = value; }
+            set { _TimeOfChange = value; TotalSeconds = value.TotalSeconds; }
+        }
+
+        private double _TotalSeconds;
+        public double TotalSeconds
+        {
+            get { return _TotalSeconds; }
+            set { _TotalSeconds = value; }
         }
 
         public string GetPresetEntryFileName()
         {
             return Path.GetFileNameWithoutExtension(_DirectoryPath);
+        }
+
+        public string GetTimeOfChangeString()
+        {
+            string time = string.Empty;
+            time = TimeOfChange.ToString();
+            time.Insert(2, ":");
+            time.Insert(5, ":");
+            return time;
         }
 
         public bool BackgroundExists()
