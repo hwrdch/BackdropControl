@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using BackdropControl.Resources;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace BackdropControl
 {
@@ -23,7 +25,7 @@ namespace BackdropControl
             PicturesPool = new List<string>(); iter = 0;
             LoadPresetsFromPath();
 
-            StaticValuesClass.DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl Presets");
+            StaticValuesClass.DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl", "BackdropControl Presets");
 
             InitializeComponent();
 
@@ -36,7 +38,44 @@ namespace BackdropControl
 
         private void LoadPresetsFromPath()
         {
-            string System
+            StaticValuesClass.DEFAULT_APP_LOCATION_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl");
+            if (!Directory.Exists(StaticValuesClass.DEFAULT_APP_LOCATION_PATH))
+            {
+                Directory.CreateDirectory(Path.Combine(StaticValuesClass.DEFAULT_APP_LOCATION_PATH, "BackdropControl Presets"));
+            }
+
+            if (!File.Exists(StaticValuesClass.DEFAULT_APP_LOCATION_PATH + "\\DefaultSettings.xml"))
+            {
+                File.Create(StaticValuesClass.DEFAULT_APP_LOCATION_PATH + "\\DefaultSettings.xml");
+                XmlSerializer XSerial = new XmlSerializer(typeof(XmlElement));
+
+                XmlDocument DefaultSettingsDocument = new XmlDocument();
+                XmlNode RootNode = DefaultSettingsDocument.CreateElement("BackdropControl");
+
+                XmlNode DefaultDirectoryNode = DefaultSettingsDocument.CreateElement("Settings1Directory");
+                DefaultDirectoryNode.InnerText = StaticValuesClass.DEFAULT_APP_LOCATION_PATH;
+                RootNode.AppendChild(DefaultDirectoryNode);
+
+                XmlNode PresetsDirectoryDocument = DefaultSettingsDocument.CreateElement("PresetsDirectory");
+                DefaultDirectoryNode.InnerText = StaticValuesClass.DEFAULT_PRESET_PATH;
+                RootNode.AppendChild(DefaultDirectoryNode);
+            }
+
+            string[] files = Directory.GetFiles(Path.Combine(StaticValuesClass.DEFAULT_APP_LOCATION_PATH, "BackdropControl Presets"));
+
+            foreach (string FileName in files)
+            {
+                string FileNameWithExt = FileName + ".xml";
+                XmlDocument LoadedDocument = new XmlDocument();
+                LoadedDocument.Load(Path.GetFullPath(FileNameWithExt));
+
+                foreach (XmlNode PresetEntryNode in LoadedDocument.DocumentElement.ChildNodes)
+                {
+                    string XMLFileName = PresetEntryNode["FileName"].Value.ToString();
+                    TimeSpan XMLTimeSpan = TimeSpan.Parse(PresetEntryNode["TimeSpan"].Value.ToString());
+                    BackgroundPresetEntry PresetEntry = new BackgroundPresetEntry(XMLFileName, XMLTimeSpan);
+                }
+            }
         }
 
         private void BackgroundDirectoryChangeEvent(object sender, EventArgs e)

@@ -13,7 +13,7 @@ namespace BackdropControl
 {
     public partial class PresetsQuickSettings : Form
     {
-        public BindingList<BackgroundPreset> ListOfLoadedPresets = new BindingList<BackgroundPreset>();
+        public BindingList<BackgroundPreset> SessionLoadedPreset = new BindingList<BackgroundPreset>();
         public string LastUsedPictureFolderDirectory;
         public BindingList<BackgroundPresetEntry> CurrentListViewPresetEntries = new BindingList<BackgroundPresetEntry>();
         public string HighlightedPresetName = string.Empty;
@@ -49,7 +49,7 @@ namespace BackdropControl
                     {
                         LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["Path"].InnerText, TimeSpan.Parse(nodes[i]["Time"].InnerText))); //load preset name
                     }
-                    ListOfLoadedPresets.Add(LoadedPreset);
+                    SessionLoadedPreset.Add(LoadedPreset);
                 }
             }
             LastUsedPictureFolderDirectory = StaticValuesClass.DEFAULT_PRESET_PATH;
@@ -94,7 +94,7 @@ namespace BackdropControl
             {
                 ClearSelectPresetListView();
                 HighlightedPresetName = ((BackgroundPreset)(PresetListBox.SelectedItem)).PresetName;
-                BackgroundPreset preset = ListOfLoadedPresets.FirstOrDefault<BackgroundPreset>(
+                BackgroundPreset preset = SessionLoadedPreset.FirstOrDefault<BackgroundPreset>(
                     s => s.PresetName == ((BackgroundPreset)PresetListBox.SelectedItem).PresetName);
 
                 foreach (BackgroundPresetEntry entry in preset.GetPresetEntries())
@@ -113,7 +113,7 @@ namespace BackdropControl
         private void PresetListChangedEvent(object sender, EventArgs e)
         {
             PresetListBox.Items.Clear();
-            foreach (BackgroundPreset bp in ListOfLoadedPresets)
+            foreach (BackgroundPreset bp in SessionLoadedPreset)
                 PresetListBox.Items.Add(bp);
         }
 
@@ -136,11 +136,11 @@ namespace BackdropControl
         {
             if (PresetListBox.SelectedItem != null) //selecting different preset
             {
-                HighlightedPresetName = ListOfLoadedPresets[PresetListBox.SelectedIndex].PresetName;
+                HighlightedPresetName = SessionLoadedPreset[PresetListBox.SelectedIndex].PresetName;
                 ClearSelectPresetListView();
-                if (ListOfLoadedPresets.Count > 0)
+                if (SessionLoadedPreset.Count > 0)
                 {
-                    foreach (BackgroundPresetEntry bpentry in ListOfLoadedPresets[PresetListBox.SelectedIndex].GetPresetEntries())
+                    foreach (BackgroundPresetEntry bpentry in SessionLoadedPreset[PresetListBox.SelectedIndex].GetPresetEntries())
                     {
                         CurrentListViewPresetEntries.Add(bpentry);
 
@@ -174,7 +174,7 @@ namespace BackdropControl
 
                     BackgroundPreset bp = new BackgroundPreset(PresetName);
 
-                    ListOfLoadedPresets.Add(bp);
+                    SessionLoadedPreset.Add(bp);
                     HighlightedPresetName = AddNewPresetTextBox.Text;
                     PresetListBox.Items.Add(bp);
 
@@ -272,7 +272,7 @@ namespace BackdropControl
                 ListViewItem item = new ListViewItem(bpentry.PictureFileName);
                 item.SubItems.Add(bpentry.GetTimeOfChangeString());
 
-                int AddedPresetIndex = ListOfLoadedPresets.First(s => s.PresetName == ((BackgroundPreset) PresetListBox.SelectedItem).PresetName).InsertPresetEntry(bpentry);
+                int AddedPresetIndex = SessionLoadedPreset.First(s => s.PresetName == ((BackgroundPreset) PresetListBox.SelectedItem).PresetName).InsertPresetEntry(bpentry);
                 SelectedPresetListView.Items.Insert(AddedPresetIndex, item);
                 CurrentListViewPresetEntries.Insert(AddedPresetIndex, bpentry);
 
@@ -291,7 +291,7 @@ namespace BackdropControl
             if (f.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 BackgroundPresetEntry bpentry = new BackgroundPresetEntry(Path.GetFullPath(f.FileName), CurrentListViewPresetEntries[SelectedPresetListView.SelectedIndices[0]].TimeOfChange);
-                ListOfLoadedPresets.First(s => s.PresetName == ((BackgroundPreset)PresetListBox.SelectedItem).PresetName).EditPresetEntry(bpentry, SelectedPresetListView.SelectedIndices[0]);
+                SessionLoadedPreset.First(s => s.PresetName == ((BackgroundPreset)PresetListBox.SelectedItem).PresetName).EditPresetEntry(bpentry, SelectedPresetListView.SelectedIndices[0]);
 
                 SelectedPresetListView.SelectedItems[0].SubItems[0].Text = bpentry.PictureFileName;
 
@@ -308,7 +308,7 @@ namespace BackdropControl
                                                                 bp.TimeOfChange.Seconds.ToString(), ref CurrentListViewPresetEntries);
             tsw.ShowDialog();
 
-            int index = ListOfLoadedPresets[PresetListBox.SelectedIndex].EditPresetEntry(CurrentListViewPresetEntries[tsw.EditedPresetEntryIndex], tsw.EditedPresetEntryIndex);
+            int index = SessionLoadedPreset[PresetListBox.SelectedIndex].EditPresetEntry(CurrentListViewPresetEntries[tsw.EditedPresetEntryIndex], tsw.EditedPresetEntryIndex);
             SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[0].Text = tsw.EditedPresetEntry.PictureFileName;
             SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[1].Text = tsw.EditedPresetEntry.GetTimeOfChangeString();
         }
@@ -321,7 +321,7 @@ namespace BackdropControl
             SelectedPresetListView.Items[index].Selected = false;
 
             CurrentListViewPresetEntries.RemoveAt(index);
-            ListOfLoadedPresets.First<BackgroundPreset>(bp => bp.PresetName == HighlightedPresetName).RemovePreset(SelectedPreset.TimeOfChange);
+            SessionLoadedPreset.First<BackgroundPreset>(bp => bp.PresetName == HighlightedPresetName).RemovePreset(SelectedPreset.TimeOfChange);
             SelectedPresetListView.Items[index].Remove();
 
             BGPreview.ImageLocation = null;

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\StaticValuesClass.cs" />
     <Compile Include="TimeSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,11 +55,11 @@
     <Compile Include="Resources\BackgroundPresetEntry.cs" />
     <Compile Include="Resources\BackgroundStyle.cs" />
     <Compile Include="Resources\BackgroundPreset.cs" />
-    <Compile Include="WallpaperSettings.cs">
+    <Compile Include="MainWallpaperSettingsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WallpaperSettings.Designer.cs">
-      <DependentUpon>WallpaperSettings.cs</DependentUpon>
+    <Compile Include="MainWallpaperSettingsWindow.Designer.cs">
+      <DependentUpon>MainWallpaperSettingsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="PresetsQuickSettings.cs">
       <SubType>Form</SubType>
@@ -77,8 +78,8 @@
     <EmbeddedResource Include="TimeSelectWindow.resx">
       <DependentUpon>TimeSelectWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WallpaperSettings.resx">
-      <DependentUpon>WallpaperSettings.cs</DependentUpon>
+    <EmbeddedResource Include="MainWallpaperSettingsWindow.resx">
+      <DependentUpon>MainWallpaperSettingsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PresetsQuickSettings.resx">
       <DependentUpon>PresetsQuickSettings.cs</DependentUpon>

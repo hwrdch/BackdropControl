@@ -11,6 +11,8 @@ namespace BackdropControl.Resources
     public static class StaticValuesClass
     {
         public static string DEFAULT_PRESET_PATH;
+        public static string DEFAULT_APP_LOCATION_PATH;
         public static BindingList<BackgroundPreset> ListOfLoadedPresets;
+        public static BindingList<BackgroundPresetEntry> LastUsedPreset;
     }
 }
