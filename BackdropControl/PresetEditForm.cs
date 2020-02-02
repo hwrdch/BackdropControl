@@ -62,19 +62,7 @@ namespace BackdropControl
         }
         private void ApplyButton_Click(object sender, EventArgs e)
         {
-            string testValue = ConvertTime();   //check time
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i].Equals(testValue))
-                {
-                    MessageBox.Show("Time value already exists in preset");
-                    return;
-                }
-            }
-
-            setPath = PathTextBox.Text;
-            setTime = testValue;
-            this.Close();
+            
         }
 
         private void DirButton_Click(object sender, EventArgs e)

@@ -42,10 +42,15 @@ namespace BackdropControl.Resources
                 if (PresetEntries.Count == 1)
                     index = PresetEntries[0].TimeOfChange.TotalSeconds > entry.TimeOfChange.TotalSeconds ? 0 : 1;
                 else if (PresetEntries.Count > 1)
+                { 
                     index = PresetEntries.IndexOf(PresetEntries.FirstOrDefault(s => s.TimeOfChange.TotalSeconds > entry.TimeOfChange.TotalSeconds));
+                    if (index == -1)
+                        index = PresetEntries.Count - 1;
+                }
                 PresetEntries.Insert(index, entry); 
             }
-
+            else
+                PresetEntries.Add(entry);
             return index;
         }
 
@@ -53,7 +58,7 @@ namespace BackdropControl.Resources
         {
             for (int i = 0; i < PresetEntries.Count; i++)
             {
-                if (entry.TimeOfChange.TotalSeconds < PresetEntries[i].TimeOfChange.TotalSeconds)
+                if (entry.TimeOfChange.TotalSeconds <= PresetEntries[i].TimeOfChange.TotalSeconds)
                 {
                     PresetEntries[index] = PresetEntries[i];
                     PresetEntries[i] = entry;

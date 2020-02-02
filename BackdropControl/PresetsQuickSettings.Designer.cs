@@ -74,25 +74,25 @@ namespace BackdropControl
             this.PresetListBox.Name = "PresetListBox";
             this.PresetListBox.Size = new System.Drawing.Size(124, 108);
             this.PresetListBox.TabIndex = 0;
-            this.PresetListBox.SelectedValueChanged += new EventHandler(this.PresetBox1SelectionChangedEvent);
-            this.PresetListBox.MouseDown += new MouseEventHandler(this.RightClick1PresetBox);
+            this.PresetListBox.SelectedValueChanged += new System.EventHandler(this.PresetBox1SelectionChangedEvent);
+            this.PresetListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RightClick1PresetBox);
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(11, 351);
+            this.CancelButton.Location = new System.Drawing.Point(12, 331);
             this.CancelButton.Margin = new System.Windows.Forms.Padding(2);
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(68, 31);
+            this.CancelButton.Size = new System.Drawing.Size(68, 21);
             this.CancelButton.TabIndex = 3;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
             // 
             // ApplyButton
             // 
-            this.ApplyButton.Location = new System.Drawing.Point(11, 315);
+            this.ApplyButton.Location = new System.Drawing.Point(12, 306);
             this.ApplyButton.Margin = new System.Windows.Forms.Padding(2);
             this.ApplyButton.Name = "ApplyButton";
-            this.ApplyButton.Size = new System.Drawing.Size(68, 31);
+            this.ApplyButton.Size = new System.Drawing.Size(68, 21);
             this.ApplyButton.TabIndex = 4;
             this.ApplyButton.Text = "Apply";
             this.ApplyButton.UseVisualStyleBackColor = true;
@@ -212,7 +212,7 @@ namespace BackdropControl
             this.DeleteWallpaperMenuItem});
             this.EditPresetMenu.Name = "EditPresetMenu";
             this.EditPresetMenu.Size = new System.Drawing.Size(164, 92);
-            this.EditPresetMenu.Closed += new ToolStripDropDownClosedEventHandler(this.EditPresetLostFocusEvent);
+            this.EditPresetMenu.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.EditPresetLostFocusEvent);
             // 
             // AddWallpaperMenuItem
             // 
@@ -268,9 +268,9 @@ namespace BackdropControl
             this.SelectedPresetListView.Size = new System.Drawing.Size(340, 108);
             this.SelectedPresetListView.TabIndex = 13;
             this.SelectedPresetListView.UseCompatibleStateImageBehavior = false;
-            this.SelectedPresetListView.MouseDown += new MouseEventHandler(this.SelectedPresetListViewRightClick);
-            this.SelectedPresetListView.ColumnWidthChanging += new ColumnWidthChangingEventHandler(this.SelectViewWidthChange);
-            this.SelectedPresetListView.ItemSelectionChanged += new ListViewItemSelectionChangedEventHandler(this.SelectedPresetChangedEvent);
+            this.SelectedPresetListView.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.SelectViewWidthChange);
+            this.SelectedPresetListView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.SelectedPresetChangedEvent);
+            this.SelectedPresetListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SelectedPresetListViewRightClick);
             // 
             // PresetsQuickSettings
             // 

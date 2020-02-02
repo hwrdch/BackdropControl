@@ -36,7 +36,7 @@ namespace BackdropControl
             ChangeTimeButton.Visible = true;
         }
 
-        private void ConfirmNewSelectedTimeEvent(object sender, EventArgs e)
+        private void ConfirmNewSelectedTimeEvent(object sender, EventArgs e)    //edit existing time preset
         {
             TimeSpan ts = TimeSpan.Parse(HRUpDown.Value.ToString() + ":" + MINUpDown.Value.ToString() + ":" + SECUpDown.Value.ToString());
             BackgroundPresetEntry bp = CurrentPresetEntries.First(s => s.TimeOfChange == TimeOfChange);
@@ -56,7 +56,7 @@ namespace BackdropControl
             this.Close();
         }
 
-        private void ConfirmSelectedTimeEvent(object sender, EventArgs e)
+        private void ConfirmSelectedTimeEvent(object sender, EventArgs e)   //new preset entry
         {
             TimeSpan ts = TimeSpan.Parse(HRUpDown.Value.ToString() + ":" + MINUpDown.Value.ToString() + ":" + SECUpDown.Value.ToString());
 

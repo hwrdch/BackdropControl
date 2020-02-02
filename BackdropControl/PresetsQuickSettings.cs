@@ -13,7 +13,6 @@ namespace BackdropControl
 {
     public partial class PresetsQuickSettings : Form
     {
-        public string DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl Presets");
         public BindingList<BackgroundPreset> ListOfLoadedPresets = new BindingList<BackgroundPreset>();
         public string LastUsedPictureFolderDirectory;
         public BindingList<BackgroundPresetEntry> CurrentListViewPresetEntries = new BindingList<BackgroundPresetEntry>();
@@ -26,9 +25,9 @@ namespace BackdropControl
         }
         public void PresetInit()
         {
-            if (!Directory.Exists(DEFAULT_PRESET_PATH))
+            if (!Directory.Exists(StaticValuesClass.DEFAULT_PRESET_PATH))
             {
-                Directory.CreateDirectory(DEFAULT_PRESET_PATH);
+                Directory.CreateDirectory(StaticValuesClass.DEFAULT_PRESET_PATH);
                 //XmlTextWriter writer = new XmlTextWriter("BackdropControlPresets.xml", Encoding.UTF8);
                 //writer.Formatting = Formatting.Indented;
                 //writer.WriteStartElement("BCPresets");
@@ -38,13 +37,13 @@ namespace BackdropControl
 
             else
             {
-                foreach(string path in Directory.GetFiles(DEFAULT_PRESET_PATH, "*.xml"))
+                foreach(string path in Directory.GetFiles(StaticValuesClass.DEFAULT_PRESET_PATH, "*.xml"))
                 { 
                     XmlDocument doc = new XmlDocument();        //collect and locally store presets from file
                     doc.Load(path);     //presets each have their own files
                     XmlElement root = doc.DocumentElement;
                     XmlNodeList nodes = doc.DocumentElement.SelectNodes("PresetEntry");
-                    BackgroundPreset LoadedPreset = new BackgroundPreset(Path.GetFileNameWithoutExtension(DEFAULT_PRESET_PATH));
+                    BackgroundPreset LoadedPreset = new BackgroundPreset(Path.GetFileNameWithoutExtension(StaticValuesClass.DEFAULT_PRESET_PATH));
 
                     for (int i = 0; i < nodes.Count; i++)
                     {
@@ -53,7 +52,7 @@ namespace BackdropControl
                     ListOfLoadedPresets.Add(LoadedPreset);
                 }
             }
-            LastUsedPictureFolderDirectory = DEFAULT_PRESET_PATH;
+            LastUsedPictureFolderDirectory = StaticValuesClass.DEFAULT_PRESET_PATH;
             SetupListView();
         }
 
@@ -310,8 +309,8 @@ namespace BackdropControl
             tsw.ShowDialog();
 
             int index = ListOfLoadedPresets[PresetListBox.SelectedIndex].EditPresetEntry(CurrentListViewPresetEntries[tsw.EditedPresetEntryIndex], tsw.EditedPresetEntryIndex);
-            SelectedPresetListView.Items[index].SubItems[0].Text = tsw.EditedPresetEntry.PictureFileName;
-            SelectedPresetListView.Items[index].SubItems[1].Text = tsw.EditedPresetEntry.GetTimeOfChangeString();
+            SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[0].Text = tsw.EditedPresetEntry.PictureFileName;
+            SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[1].Text = tsw.EditedPresetEntry.GetTimeOfChangeString();
         }
 
         private void RightClick2DeleteWallpaper(object sender, EventArgs e)

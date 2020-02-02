@@ -7,27 +7,36 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
+using BackdropControl.Resources;
 
 namespace BackdropControl
 {
-    public partial class WallpaperSettings : Form
+    public partial class MainWallpaperSettingsWindow : Form
     {
         private string folderPath;
         private string oldFolderPath;
-        private List<string> pictures;
+        private List<string> PicturesPool;
         private int iter;
 
-        public WallpaperSettings()
+        public MainWallpaperSettingsWindow()
         {
-            pictures = new List<string>();
-            iter = 0;
-            XMLInit();
+            PicturesPool = new List<string>(); iter = 0;
+            LoadPresetsFromPath();
+
+            StaticValuesClass.DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl Presets");
+
             InitializeComponent();
+
             loadXML();  //load XML data
             if (folderPath == "" || folderPath == null)
                 BGTimer.Enabled = false;
             else
                 BGTimer.Enabled = true;
+        }
+
+        private void LoadPresetsFromPath()
+        {
+            string System
         }
 
         private void BackgroundDirectoryChangeEvent(object sender, EventArgs e)
@@ -48,7 +57,7 @@ namespace BackdropControl
                 applybutton.Enabled = true;
             }
         }
-        private void setBackground(string file)
+        private void SetBackgroundPicture(string file)
         {
             const int SET_DESKTOP_BACKGROUND = 20;
             const int UPDATE_INI_FILE = 1;
@@ -64,11 +73,11 @@ namespace BackdropControl
             internal static extern int SystemParametersInfo(int uAction, int uParam, String lpvParam, int fuWinIni);
         }
 
-        private void BGTimer_Tick(object sender, EventArgs e)
+        private async void BGTimer_Tick(object sender, EventArgs e)
         {
             if (!Directory.Exists(folderPath))
             {
-                pictures.Clear();
+                PicturesPool.Clear();
                 loadXML();
             }
             else
@@ -79,17 +88,17 @@ namespace BackdropControl
 
         private void TimelyWallpaperChange()
         {
-            if (pictures.Count() != 0)
+            if (PicturesPool.Count() != 0)
             {
-                if (iter < pictures.Count())
+                if (iter < PicturesPool.Count())
                 {
-                    setBackground(pictures[iter]);
+                    SetBackgroundPicture(PicturesPool[iter]);
                     iter++;
                 }
                 else
                 {
                     iter = 0;
-                    setBackground(pictures[iter]);
+                    SetBackgroundPicture(PicturesPool[iter]);
                 }
             }
         }
@@ -99,7 +108,7 @@ namespace BackdropControl
             System.Diagnostics.Debug.WriteLine("File: " + e.FullPath);
             string ext = Path.GetExtension(e.FullPath);
             if (ext == "png" || ext == "jpg" || ext == "jpeg")
-                pictures.Add(e.FullPath);
+                PicturesPool.Add(e.FullPath);
         }
 
         private void PictureCheck(string filepath)
@@ -111,7 +120,7 @@ namespace BackdropControl
             stream.Close();
             if (CheckPicture(fileBytes))
             {
-                pictures.Add(filepath);
+                PicturesPool.Add(filepath);
             }
         }
 
@@ -123,16 +132,16 @@ namespace BackdropControl
         private void watcher_Deleted(object sender, FileSystemEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("File deleted: {0}", e.Name);
-            pictures.RemoveAt(pictures.IndexOf(e.FullPath));
-            foreach (string s in pictures)
+            PicturesPool.RemoveAt(PicturesPool.IndexOf(e.FullPath));
+            foreach (string s in PicturesPool)
                 System.Diagnostics.Debug.WriteLine(s);
         }
 
         private void watcher_Renamed(object sender, RenamedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("FILE RENAME: {0} -> {1}", e.OldFullPath, e.FullPath);
-            pictures[pictures.IndexOf(e.OldFullPath)] = e.FullPath;
-            foreach (string s in pictures)
+            PicturesPool[PicturesPool.IndexOf(e.OldFullPath)] = e.FullPath;
+            foreach (string s in PicturesPool)
                 System.Diagnostics.Debug.WriteLine(s);
         }
 
@@ -174,11 +183,11 @@ namespace BackdropControl
             {
                 BGTimer.Enabled = true;     //change data only AFTER apply button is clicked
                 watcher.Path = folderPath;
-                pictures.Clear();
+                PicturesPool.Clear();
                 var filepaths = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
                 foreach (string elem in filepaths)
                 {
-                    pictures.Add(elem);
+                    PicturesPool.Add(elem);
                 }
                 oldFolderPath = folderPath;
                 filepathLabel.Text = folderPath;

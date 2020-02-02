@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace BackdropControl
 {
-    partial class WallpaperSettings
+    partial class MainWallpaperSettingsWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -37,28 +37,10 @@ namespace BackdropControl
         /// </summary>
         /// 
 
-        private void XMLInit()
-        {
-            if (!File.Exists("normalSettings.xml"))
-            {
-                XmlTextWriter writer = new XmlTextWriter("normalSettings.xml", Encoding.UTF8);
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartElement("Settings");
-                writer.WriteStartElement("Folder");
-                writer.WriteString(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures).ToString());
-                writer.WriteEndElement();   //Filepath
-                writer.WriteStartElement("Interval");
-                writer.WriteString("0:0:10");
-                writer.WriteEndElement();   //Interval
-                writer.WriteEndElement();   //Normal Settings
-                writer.Close();
-            }
-        }
-
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WallpaperSettings));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWallpaperSettingsWindow));
             this.BGchange = new System.Windows.Forms.Button();
             this.BGTimer = new System.Windows.Forms.Timer(this.components);
             this.filepathLabel = new System.Windows.Forms.Label();
@@ -396,7 +378,7 @@ namespace BackdropControl
             var filepaths = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
             foreach (string elem in filepaths)
             {
-                pictures.Add(elem);
+                PicturesPool.Add(elem);
             }
             this.applybutton.Enabled = false;
         }
