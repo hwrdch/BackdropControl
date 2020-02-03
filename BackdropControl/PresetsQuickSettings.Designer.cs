@@ -86,6 +86,7 @@ namespace BackdropControl
             this.CancelButton.TabIndex = 3;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.Click += new EventHandler(this.PresetSettingsCancel);
             // 
             // ApplyButton
             // 
@@ -95,7 +96,9 @@ namespace BackdropControl
             this.ApplyButton.Size = new System.Drawing.Size(68, 21);
             this.ApplyButton.TabIndex = 4;
             this.ApplyButton.Text = "Apply";
+            this.ApplyButton.Enabled = false;
             this.ApplyButton.UseVisualStyleBackColor = true;
+            this.ApplyButton.Click += new EventHandler(this.SerializePresetSettings);
             // 
             // label1
             // 

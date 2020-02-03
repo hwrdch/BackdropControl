@@ -52,7 +52,7 @@ namespace BackdropControl
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.applybutton = new System.Windows.Forms.Button();
+            this.MainSettingsApplyButton = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.settingsStrip = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +64,8 @@ namespace BackdropControl
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.OpenPresetsSettingsButton = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.StatusLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.watcher)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHour)).BeginInit();
@@ -74,7 +76,7 @@ namespace BackdropControl
             // BGchange
             // 
             this.BGchange.Location = new System.Drawing.Point(262, 58);
-            this.BGchange.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.BGchange.Margin = new System.Windows.Forms.Padding(2);
             this.BGchange.Name = "BGchange";
             this.BGchange.Size = new System.Drawing.Size(22, 19);
             this.BGchange.TabIndex = 0;
@@ -82,17 +84,17 @@ namespace BackdropControl
             this.BGchange.UseVisualStyleBackColor = true;
             this.BGchange.Click += new System.EventHandler(this.BackgroundDirectoryChangeEvent);
             // 
-            // BGTimer
+            // BackgroundChangeTimer
             // 
-            this.BackgroundChangeTimer.Tick += new System.EventHandler(this.BGTimer_Tick);
+            this.BackgroundChangeTimer.Tick += new System.EventHandler(this.BackgroundTimerEvent);
             // 
-            // filepathLabel
+            // SelectedFolderLabel
             // 
             this.SelectedFolderLabel.AutoEllipsis = true;
             this.SelectedFolderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SelectedFolderLabel.Location = new System.Drawing.Point(66, 58);
             this.SelectedFolderLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.SelectedFolderLabel.Name = "filepathLabel";
+            this.SelectedFolderLabel.Name = "SelectedFolderLabel";
             this.SelectedFolderLabel.Size = new System.Drawing.Size(192, 19);
             this.SelectedFolderLabel.TabIndex = 1;
             this.SelectedFolderLabel.Text = "Path Directory";
@@ -123,7 +125,7 @@ namespace BackdropControl
             // numMin
             // 
             this.numMin.Location = new System.Drawing.Point(319, 85);
-            this.numMin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numMin.Margin = new System.Windows.Forms.Padding(2);
             this.numMin.Maximum = new decimal(new int[] {
             60,
             0,
@@ -137,7 +139,7 @@ namespace BackdropControl
             // numHour
             // 
             this.numHour.Location = new System.Drawing.Point(262, 85);
-            this.numHour.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numHour.Margin = new System.Windows.Forms.Padding(2);
             this.numHour.Maximum = new decimal(new int[] {
             23,
             0,
@@ -151,7 +153,7 @@ namespace BackdropControl
             // numSec
             // 
             this.numSec.Location = new System.Drawing.Point(385, 85);
-            this.numSec.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numSec.Margin = new System.Windows.Forms.Padding(2);
             this.numSec.Maximum = new decimal(new int[] {
             60,
             0,
@@ -195,16 +197,16 @@ namespace BackdropControl
             this.label4.TabIndex = 10;
             this.label4.Text = "sec";
             // 
-            // applybutton
+            // MainSettingsApplyButton
             // 
-            this.applybutton.Location = new System.Drawing.Point(331, 233);
-            this.applybutton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.applybutton.Name = "applybutton";
-            this.applybutton.Size = new System.Drawing.Size(61, 24);
-            this.applybutton.TabIndex = 12;
-            this.applybutton.Text = "Apply";
-            this.applybutton.UseVisualStyleBackColor = true;
-            this.applybutton.Click += new System.EventHandler(this.applybutton_Click);
+            this.MainSettingsApplyButton.Location = new System.Drawing.Point(331, 233);
+            this.MainSettingsApplyButton.Margin = new System.Windows.Forms.Padding(2);
+            this.MainSettingsApplyButton.Name = "MainSettingsApplyButton";
+            this.MainSettingsApplyButton.Size = new System.Drawing.Size(61, 24);
+            this.MainSettingsApplyButton.TabIndex = 12;
+            this.MainSettingsApplyButton.Text = "Apply";
+            this.MainSettingsApplyButton.UseVisualStyleBackColor = true;
+            this.MainSettingsApplyButton.Click += new System.EventHandler(this.SerializeMainSettings);
             // 
             // notifyIcon1
             // 
@@ -247,20 +249,20 @@ namespace BackdropControl
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(396, 233);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(61, 24);
             this.button1.TabIndex = 13;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.cancel_Click);
+            this.button1.Click += new System.EventHandler(this.MainSettingsCancel);
             // 
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
             this.radioButton1.Checked = true;
             this.radioButton1.Location = new System.Drawing.Point(35, 28);
-            this.radioButton1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButton1.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(86, 17);
             this.radioButton1.TabIndex = 14;
@@ -273,7 +275,7 @@ namespace BackdropControl
             // 
             this.radioButton2.AutoSize = true;
             this.radioButton2.Location = new System.Drawing.Point(35, 119);
-            this.radioButton2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButton2.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(108, 17);
             this.radioButton2.TabIndex = 15;
@@ -295,7 +297,7 @@ namespace BackdropControl
             // comboBox1
             // 
             this.comboBox1.Location = new System.Drawing.Point(262, 153);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox1.MaxDropDownItems = 10;
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(156, 21);
@@ -305,7 +307,7 @@ namespace BackdropControl
             // 
             this.OpenPresetsSettingsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenPresetsSettingsButton.Location = new System.Drawing.Point(331, 177);
-            this.OpenPresetsSettingsButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OpenPresetsSettingsButton.Margin = new System.Windows.Forms.Padding(2);
             this.OpenPresetsSettingsButton.Name = "OpenPresetsSettingsButton";
             this.OpenPresetsSettingsButton.Size = new System.Drawing.Size(86, 23);
             this.OpenPresetsSettingsButton.TabIndex = 18;
@@ -313,18 +315,39 @@ namespace BackdropControl
             this.OpenPresetsSettingsButton.UseVisualStyleBackColor = true;
             this.OpenPresetsSettingsButton.Click += new System.EventHandler(this.OpenPresetsSettingsEvent);
             // 
-            // WallpaperSettings
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(0, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(35, 13);
+            this.label6.TabIndex = 19;
+            this.label6.Text = "label6";
+            // 
+            // StatusLabel
+            // 
+            this.StatusLabel.AutoSize = true;
+            this.StatusLabel.Location = new System.Drawing.Point(12, 259);
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(35, 13);
+            this.StatusLabel.TabIndex = 20;
+            this.StatusLabel.Text = "label7";
+            this.StatusLabel.Visible = false;
+            // 
+            // MainWallpaperSettingsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(488, 281);
+            this.Controls.Add(this.StatusLabel);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.OpenPresetsSettingsButton);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.applybutton);
+            this.Controls.Add(this.MainSettingsApplyButton);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
@@ -334,10 +357,10 @@ namespace BackdropControl
             this.Controls.Add(this.label2);
             this.Controls.Add(this.SelectedFolderLabel);
             this.Controls.Add(this.BGchange);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "WallpaperSettings";
+            this.Name = "MainWallpaperSettingsWindow";
             this.Text = "Wallpaper Changer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.closeForm);
             ((System.ComponentModel.ISupportInitialize)(this.watcher)).EndInit();
@@ -362,7 +385,7 @@ namespace BackdropControl
         private System.Windows.Forms.NumericUpDown numSec;
         private System.Windows.Forms.NumericUpDown numHour;
         private System.Windows.Forms.NumericUpDown numMin;
-        private System.Windows.Forms.Button applybutton;
+        private System.Windows.Forms.Button MainSettingsApplyButton;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem settingsStrip;
@@ -374,6 +397,8 @@ namespace BackdropControl
         private ComboBox comboBox1;
         private Label label5;
         private Button OpenPresetsSettingsButton;
+        private Label StatusLabel;
+        private Label label6;
     }
 }
 

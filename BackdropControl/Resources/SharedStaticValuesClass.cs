@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BackdropControl.Resources
 {
-    public static class SharedStaticValuesClass
+    public static class SharedObjects
     {
         public static string DEFAULT_PRESET_PATH;
         public static string DEFAULT_APP_LOCATION_PATH;

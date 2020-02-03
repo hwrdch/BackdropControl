@@ -25,25 +25,20 @@ namespace BackdropControl
         }
         public void PresetInit()
         {
-            if (!Directory.Exists(SharedStaticValuesClass.DEFAULT_PRESET_PATH))
+            if (!Directory.Exists(SharedObjects.DEFAULT_PRESET_PATH))
             {
-                Directory.CreateDirectory(SharedStaticValuesClass.DEFAULT_PRESET_PATH);
-                //XmlTextWriter writer = new XmlTextWriter("BackdropControlPresets.xml", Encoding.UTF8);
-                //writer.Formatting = Formatting.Indented;
-                //writer.WriteStartElement("BCPresets");
-                //writer.WriteEndElement();
-                //writer.Close();
+                Directory.CreateDirectory(SharedObjects.DEFAULT_PRESET_PATH);
             }
 
             else
             {
-                foreach(string path in Directory.GetFiles(SharedStaticValuesClass.DEFAULT_PRESET_PATH, "*.xml"))
+                foreach(string path in Directory.GetFiles(SharedObjects.DEFAULT_PRESET_PATH, "*.xml"))
                 { 
                     XmlDocument doc = new XmlDocument();        //collect and locally store presets from file
                     doc.Load(path);     //presets each have their own files
                     XmlElement root = doc.DocumentElement;
                     XmlNodeList nodes = doc.DocumentElement.SelectNodes("PresetEntry");
-                    BackgroundPreset LoadedPreset = new BackgroundPreset(Path.GetFileNameWithoutExtension(SharedStaticValuesClass.DEFAULT_PRESET_PATH));
+                    BackgroundPreset LoadedPreset = new BackgroundPreset(Path.GetFileNameWithoutExtension(SharedObjects.DEFAULT_PRESET_PATH));
 
                     for (int i = 0; i < nodes.Count; i++)
                     {
@@ -52,7 +47,7 @@ namespace BackdropControl
                     SessionLoadedPreset.Add(LoadedPreset);
                 }
             }
-            LastUsedPictureFolderDirectory = SharedStaticValuesClass.DEFAULT_PRESET_PATH;
+            LastUsedPictureFolderDirectory = SharedObjects.DEFAULT_PRESET_PATH;
             SetupListView();
         }
 
@@ -276,6 +271,10 @@ namespace BackdropControl
                 SelectedPresetListView.Items.Insert(AddedPresetIndex, item);
                 CurrentListViewPresetEntries.Insert(AddedPresetIndex, bpentry);
 
+                if (SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == PresetListBox.SelectedItem.ToString()) == null)
+                    SharedObjects.ListOfLoadedPresets.Add(new BackgroundPreset(PresetListBox.SelectedItem.ToString()));
+                SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == PresetListBox.SelectedItem.ToString()).AddPresetEntry(bpentry);
+
                 BGPreview.ImageLocation = bpentry.DirectoryPath;
             }
         }
@@ -297,6 +296,8 @@ namespace BackdropControl
 
                 CurrentListViewPresetEntries[SelectedPresetListView.SelectedIndices[0]] = bpentry;
                 BGPreview.ImageLocation = bpentry.DirectoryPath;
+
+                int x = SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == PresetListBox.SelectedItem.ToString()).EditPresetEntry(bpentry, SelectedPresetListView.SelectedIndices[0]);
             }
         }
 
@@ -311,6 +312,8 @@ namespace BackdropControl
             int index = SessionLoadedPreset[PresetListBox.SelectedIndex].EditPresetEntry(CurrentListViewPresetEntries[tsw.EditedPresetEntryIndex], tsw.EditedPresetEntryIndex);
             SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[0].Text = tsw.EditedPresetEntry.PictureFileName;
             SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[1].Text = tsw.EditedPresetEntry.GetTimeOfChangeString();
+
+            int x = SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == PresetListBox.SelectedItem.ToString()).EditPresetEntry(CurrentListViewPresetEntries[tsw.EditedPresetEntryIndex], tsw.EditedPresetEntryIndex);
         }
 
         private void RightClick2DeleteWallpaper(object sender, EventArgs e)
@@ -324,7 +327,24 @@ namespace BackdropControl
             SessionLoadedPreset.First<BackgroundPreset>(bp => bp.PresetName == HighlightedPresetName).RemovePreset(SelectedPreset.TimeOfChange);
             SelectedPresetListView.Items[index].Remove();
 
+            SharedObjects.ListOfLoadedPresets.First<BackgroundPreset>(bp => bp.PresetName == HighlightedPresetName).RemovePreset(SelectedPreset.TimeOfChange);
             BGPreview.ImageLocation = null;
+        }
+
+        private void SerializePresetSettings(object sender, EventArgs e)
+        {
+            foreach (BackgroundPreset Preset in SharedObjects.ListOfLoadedPresets)
+            {
+
+            }
+
+            //implement master class serialized object
+        }
+
+        private void PresetSettingsCancel(object sender, EventArgs e)
+        {
+            //Done after master class of serialized objects is done.
+            throw new NotImplementedException();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace BackdropControl
             LoadMainWallpaperSettings();
 
             //LoadPresetsFromPath();  //Load Presets Settings
-            SharedStaticValuesClass.DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl", "BackdropControl Presets");
+            SharedObjects.DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl", "BackdropControl Presets");
             if (SelectedBackgroundPicturesFolder == "" || SelectedBackgroundPicturesFolder == null)
                 BackgroundChangeTimer.Enabled = false;
             else
@@ -40,13 +40,13 @@ namespace BackdropControl
         {
             try
             {
-                SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl");
-                if (!Directory.Exists(SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH))
+                SharedObjects.DEFAULT_APP_LOCATION_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl");
+                if (!Directory.Exists(SharedObjects.DEFAULT_APP_LOCATION_PATH))
                 {
-                    Directory.CreateDirectory(SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH);
+                    Directory.CreateDirectory(SharedObjects.DEFAULT_APP_LOCATION_PATH);
                 }
 
-                string XMLFilePath = Path.Combine(SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH, "MainWallpaperSettings.xml");
+                string XMLFilePath = Path.Combine(SharedObjects.DEFAULT_APP_LOCATION_PATH, "MainWallpaperSettings.xml");
 
                 if (!File.Exists(XMLFilePath))
                 {
@@ -55,7 +55,7 @@ namespace BackdropControl
                         writer.Formatting = Formatting.Indented;
                         writer.WriteStartDocument();
                         writer.WriteStartElement("BackdropControlMainSettings", "");
-                        writer.WriteElementString("Directory", XMLFilePath);
+                        writer.WriteElementString("Directory", Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
                         writer.WriteElementString("TimeInterval", "00:00:10");
                         writer.WriteEndElement();
                         writer.WriteEndDocument();
@@ -73,11 +73,11 @@ namespace BackdropControl
                     #region Load directory
                     XmlDocument MainSettingsDocument = new XmlDocument();
                     MainSettingsDocument.Load(XMLFilePath);
-                    SelectedBackgroundPicturesFolder = MainSettingsDocument["Directory"].Value.ToString();
+                    SelectedBackgroundPicturesFolder = Path.GetFullPath(MainSettingsDocument["BackdropControlMainSettings"].ChildNodes[0].InnerText);
                     #endregion
 
                     #region Load time interval
-                    string[] arr = MainSettingsDocument["TimeInterval"].Value.ToString().Split(':');
+                    string[] arr = MainSettingsDocument["BackdropControlMainSettings"].ChildNodes[1].InnerText.Split(':');
                     this.numHour.Value = new decimal(new int[] { Convert.ToInt32(arr[0]), 0, 0, 0 });
                     this.numMin.Value = new decimal(new int[] { Convert.ToInt32(arr[1]), 0, 0, 0 });
                     this.numSec.Value = new decimal(new int[] { Convert.ToInt32(arr[2]), 0, 0, 0 });
@@ -85,12 +85,12 @@ namespace BackdropControl
                     #endregion
 
                     watcher.Path = SelectedBackgroundPicturesFolder;
-                    SelectedBackgroundPicturesFolder = XMLFilePath;
                     this.SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
                 }
 
-                this.applybutton.Enabled = false;
+                this.MainSettingsApplyButton.Enabled = false;
                 LoadToPicturesPool();
+                LastUsedWallpaperDirectory = SelectedBackgroundPicturesFolder;
             }
             catch (Exception ex)
             {
@@ -109,14 +109,14 @@ namespace BackdropControl
 
         private void LoadPresetsFromPath()
         {
-            if (!Directory.Exists(Path.Combine(SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH, "BackdropControl Presets")))
+            if (!Directory.Exists(SelectedBackgroundPicturesFolder))
             {
-                Directory.CreateDirectory(Path.Combine(SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH, "BackdropControl Presets"));
+                Directory.CreateDirectory(SelectedBackgroundPicturesFolder);
             }
 
-            if (!File.Exists(SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH + "\\DefaultSettings.xml"))
+            if (!File.Exists(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\DefaultSettings.xml"))
             {
-                File.Create(SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH + "\\DefaultSettings.xml");
+                File.Create(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\DefaultSettings.xml");
                 XmlSerializer XSerial = new XmlSerializer(typeof(XmlElement));
 
                 #region Default Settings Unloaded
@@ -124,17 +124,17 @@ namespace BackdropControl
                 XmlNode RootNode = DefaultSettingsDocument.CreateElement("BackdropControl");
 
                 XmlNode DefaultDirectoryNode = DefaultSettingsDocument.CreateElement("Settings1Directory");
-                DefaultDirectoryNode.InnerText = SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH;
+                DefaultDirectoryNode.InnerText = SharedObjects.DEFAULT_APP_LOCATION_PATH;
                 RootNode.AppendChild(DefaultDirectoryNode);
 
                 XmlNode PresetsDirectoryDocument = DefaultSettingsDocument.CreateElement("PresetsDirectory");
-                DefaultDirectoryNode.InnerText = SharedStaticValuesClass.DEFAULT_PRESET_PATH;
+                DefaultDirectoryNode.InnerText = SharedObjects.DEFAULT_PRESET_PATH;
                 RootNode.AppendChild(DefaultDirectoryNode);
                 #endregion
             }
 
             #region Load Preset Files
-            string[] PresetFiles = Directory.GetFiles(Path.Combine(SharedStaticValuesClass.DEFAULT_APP_LOCATION_PATH, "BackdropControl Presets"));
+            string[] PresetFiles = Directory.GetFiles(Path.Combine(SharedObjects.DEFAULT_APP_LOCATION_PATH, "BackdropControl Presets"));
             foreach (string FileName in PresetFiles)
             {
                 string FileNameWithExt = FileName + ".xml";
@@ -149,10 +149,10 @@ namespace BackdropControl
                     BGPreset.AddPresetEntry(new BackgroundPresetEntry(XMLFileName, XMLTimeSpan));
                 }
 
-                SharedStaticValuesClass.LoadedPresetNames.Add(FileName);
+                SharedObjects.LoadedPresetNames.Add(FileName);
                 if (LoadedDocument["Active"].Value == "1")
                 {
-                    SharedStaticValuesClass.LastUsedPreset = BGPreset;
+                    SharedObjects.LastUsedPreset = BGPreset;
                 }
             }
             #endregion
@@ -172,7 +172,7 @@ namespace BackdropControl
             {
                 SelectedBackgroundPicturesFolder = f.SelectedPath;
                 SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
-                applybutton.Enabled = true;
+                MainSettingsApplyButton.Enabled = true;
             }
         }
         private void SetBackgroundPicture(string file)
@@ -191,7 +191,7 @@ namespace BackdropControl
             internal static extern int SystemParametersInfo(int uAction, int uParam, String lpvParam, int fuWinIni);
         }
 
-        private void BGTimer_Tick(object sender, EventArgs e)
+        private void BackgroundTimerEvent(object sender, EventArgs e)
         {
             if (!Directory.Exists(SelectedBackgroundPicturesFolder))
             {
@@ -286,9 +286,9 @@ namespace BackdropControl
             notifyIcon1.Visible = false;
         }
 
-        private void applybutton_Click(object sender, EventArgs e)
+        private void SerializeMainSettings(object sender, EventArgs e)
         {
-            var doc = XElement.Load("normalSettings.xml");
+            var doc = XElement.Load(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\MainWallpaperSettings.xml");
             int intervalSum = (3600000 * Convert.ToInt32(numHour.Value)) + (60000 * Convert.ToInt32(numMin.Value)) + (1000 * Convert.ToInt32(numSec.Value));
             if (intervalSum < 10000)
             {
@@ -297,11 +297,14 @@ namespace BackdropControl
             }
             else
             {
-                doc.Element("Interval").Value = numHour.Value.ToString() + ":" + numMin.Value.ToString() + ":" + numSec.Value.ToString();
-                doc.Element("Folder").Value = SelectedBackgroundPicturesFolder;
-                doc.Save("normalSettings.xml");
+                StatusLabel.Visible = true;
+                StatusLabel.Text = "Saving...";
+                doc.Element("TimeInterval").Value = numHour.Value.ToString() + ":" + numMin.Value.ToString() + ":" + numSec.Value.ToString();
+                doc.Element("Directory").Value = SelectedBackgroundPicturesFolder;
+                doc.Save(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\MainWallpaperSettings.xml");
                 this.BackgroundChangeTimer.Interval = intervalSum;
             }
+
             if (SelectedBackgroundPicturesFolder != LastUsedWallpaperDirectory)
             {
                 BackgroundChangeTimer.Enabled = true;     //change data only AFTER apply button is clicked
@@ -315,13 +318,14 @@ namespace BackdropControl
                 LastUsedWallpaperDirectory = SelectedBackgroundPicturesFolder;
                 SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
             }
-            applybutton.Enabled = false;
+            MainSettingsApplyButton.Enabled = false;
+            StatusLabel.Text = "Settings Saved.";
         }
 
-        private void cancel_Click(object sender, EventArgs e)
+        private void MainSettingsCancel(object sender, EventArgs e)
         {
             LoadMainWallpaperSettings();
-            applybutton.Enabled = false;
+            MainSettingsApplyButton.Enabled = false;
             this.Hide();
             notifyIcon1.Visible = true;
         }
@@ -339,17 +343,17 @@ namespace BackdropControl
 
         private void numSec_ValueChanged(object sender, EventArgs e)
         {
-            applybutton.Enabled = true;
+            MainSettingsApplyButton.Enabled = true;
         }
 
         private void numHour_ValueChanged(object sender, EventArgs e)
         {
-            applybutton.Enabled = true;
+            MainSettingsApplyButton.Enabled = true;
         }
 
         private void numMin_ValueChanged(object sender, EventArgs e)
         {
-            applybutton.Enabled = true;
+            MainSettingsApplyButton.Enabled = true;
         }
 
 
@@ -412,7 +416,7 @@ namespace BackdropControl
                 greyOutMode2();
             else if (radioButton1.Checked == false)
                 greyOutMode1();
-            applybutton.Enabled = true;
+            MainSettingsApplyButton.Enabled = true;
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
@@ -421,7 +425,7 @@ namespace BackdropControl
                 greyOutMode1();
             else if (radioButton2.Checked == false)
                 greyOutMode2();
-            applybutton.Enabled = true;
+            MainSettingsApplyButton.Enabled = true;
         }
 
         private void greyOutMode2()
