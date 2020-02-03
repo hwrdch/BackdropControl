@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Resources\StaticValuesClass.cs" />
+    <Compile Include="Resources\SharedStaticValuesClass.cs" />
     <Compile Include="TimeSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>

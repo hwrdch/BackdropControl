@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace BackdropControl.Resources
 {
-    public static class StaticValuesClass
+    public static class SharedStaticValuesClass
     {
         public static string DEFAULT_PRESET_PATH;
         public static string DEFAULT_APP_LOCATION_PATH;
         public static BindingList<BackgroundPreset> ListOfLoadedPresets;
-        public static BindingList<BackgroundPresetEntry> LastUsedPreset;
+        public static BackgroundPreset LastUsedPreset;
+        public static BindingList<string> LoadedPresetNames;
     }
 }

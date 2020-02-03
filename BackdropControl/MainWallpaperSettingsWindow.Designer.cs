@@ -42,8 +42,8 @@ namespace BackdropControl
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWallpaperSettingsWindow));
             this.BGchange = new System.Windows.Forms.Button();
-            this.BGTimer = new System.Windows.Forms.Timer(this.components);
-            this.filepathLabel = new System.Windows.Forms.Label();
+            this.BackgroundChangeTimer = new System.Windows.Forms.Timer(this.components);
+            this.SelectedFolderLabel = new System.Windows.Forms.Label();
             this.watcher = new System.IO.FileSystemWatcher();
             this.label2 = new System.Windows.Forms.Label();
             this.numMin = new System.Windows.Forms.NumericUpDown();
@@ -84,18 +84,18 @@ namespace BackdropControl
             // 
             // BGTimer
             // 
-            this.BGTimer.Tick += new System.EventHandler(this.BGTimer_Tick);
+            this.BackgroundChangeTimer.Tick += new System.EventHandler(this.BGTimer_Tick);
             // 
             // filepathLabel
             // 
-            this.filepathLabel.AutoEllipsis = true;
-            this.filepathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.filepathLabel.Location = new System.Drawing.Point(66, 58);
-            this.filepathLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.filepathLabel.Name = "filepathLabel";
-            this.filepathLabel.Size = new System.Drawing.Size(192, 19);
-            this.filepathLabel.TabIndex = 1;
-            this.filepathLabel.Text = "Path Directory";
+            this.SelectedFolderLabel.AutoEllipsis = true;
+            this.SelectedFolderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SelectedFolderLabel.Location = new System.Drawing.Point(66, 58);
+            this.SelectedFolderLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.SelectedFolderLabel.Name = "filepathLabel";
+            this.SelectedFolderLabel.Size = new System.Drawing.Size(192, 19);
+            this.SelectedFolderLabel.TabIndex = 1;
+            this.SelectedFolderLabel.Text = "Path Directory";
             // 
             // watcher
             // 
@@ -332,7 +332,7 @@ namespace BackdropControl
             this.Controls.Add(this.numHour);
             this.Controls.Add(this.numMin);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.filepathLabel);
+            this.Controls.Add(this.SelectedFolderLabel);
             this.Controls.Add(this.BGchange);
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
@@ -350,43 +350,10 @@ namespace BackdropControl
 
         }
 
-        private void loadXML()
-        {
-            XDocument doc = XDocument.Load("normalSettings.xml");
-
-            folderPath = (string)doc.Descendants("Folder").First();
-
-            string[] arr = ((string)(from el in doc.Descendants("Interval") select el).First()).Split(':');
-            this.numHour.Value = new decimal(new int[] { Convert.ToInt32(arr[0]), 0, 0, 0 });
-            this.numMin.Value = new decimal(new int[] { Convert.ToInt32(arr[1]), 0, 0, 0 });
-            this.numSec.Value = new decimal(new int[] { Convert.ToInt32(arr[2]), 0, 0, 0 });
-            this.BGTimer.Interval = (3600000 * Convert.ToInt32(numHour.Value)) + (60000 * Convert.ToInt32(numMin.Value)) + (1000 * Convert.ToInt32(numSec.Value));
-
-            if (folderPath == "" || folderPath == null || !Directory.Exists(folderPath))
-            {
-                this.filepathLabel.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures).ToString();
-                folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures).ToString();
-                var fix = XElement.Load("normalSettings.xml");
-                fix.Element("Folder").Value = folderPath;
-                fix.Save("normalSettings.xml");
-            }
-            else
-            {
-                this.filepathLabel.Text = folderPath;
-            }
-            watcher.Path = folderPath;
-            var filepaths = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
-            foreach (string elem in filepaths)
-            {
-                PicturesPool.Add(elem);
-            }
-            this.applybutton.Enabled = false;
-        }
-
         #endregion
         private System.Windows.Forms.Button BGchange;
-        private System.Windows.Forms.Timer BGTimer;
-        private System.Windows.Forms.Label filepathLabel;
+        private System.Windows.Forms.Timer BackgroundChangeTimer;
+        private System.Windows.Forms.Label SelectedFolderLabel;
         private System.IO.FileSystemWatcher watcher;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label4;
