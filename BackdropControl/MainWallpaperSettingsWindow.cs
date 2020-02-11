@@ -34,6 +34,7 @@ namespace BackdropControl
             else
                 BackgroundChangeTimer.Enabled = true;
 
+            LoadPresetsFromPath();
         }
 
         private void LoadMainWallpaperSettings()
@@ -109,53 +110,30 @@ namespace BackdropControl
 
         private void LoadPresetsFromPath()
         {
-            if (!Directory.Exists(SelectedBackgroundPicturesFolder))
+            if (!Directory.Exists(SharedObjects.DEFAULT_PRESET_PATH))
             {
-                Directory.CreateDirectory(SelectedBackgroundPicturesFolder);
+                Directory.CreateDirectory(SharedObjects.DEFAULT_PRESET_PATH);
             }
 
-            if (!File.Exists(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\DefaultSettings.xml"))
+            else
             {
-                File.Create(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\DefaultSettings.xml");
-                XmlSerializer XSerial = new XmlSerializer(typeof(XmlElement));
-
-                #region Default Settings Unloaded
-                XmlDocument DefaultSettingsDocument = new XmlDocument();
-                XmlNode RootNode = DefaultSettingsDocument.CreateElement("BackdropControl");
-
-                XmlNode DefaultDirectoryNode = DefaultSettingsDocument.CreateElement("Settings1Directory");
-                DefaultDirectoryNode.InnerText = SharedObjects.DEFAULT_APP_LOCATION_PATH;
-                RootNode.AppendChild(DefaultDirectoryNode);
-
-                XmlNode PresetsDirectoryDocument = DefaultSettingsDocument.CreateElement("PresetsDirectory");
-                DefaultDirectoryNode.InnerText = SharedObjects.DEFAULT_PRESET_PATH;
-                RootNode.AppendChild(DefaultDirectoryNode);
-                #endregion
-            }
-
-            #region Load Preset Files
-            string[] PresetFiles = Directory.GetFiles(Path.Combine(SharedObjects.DEFAULT_APP_LOCATION_PATH, "BackdropControl Presets"));
-            foreach (string FileName in PresetFiles)
-            {
-                string FileNameWithExt = FileName + ".xml";
-                XmlDocument LoadedDocument = new XmlDocument();
-                LoadedDocument.Load(Path.GetFullPath(FileNameWithExt));
-
-                BackgroundPreset BGPreset = new BackgroundPreset(FileName);
-                foreach (XmlNode PresetEntryNode in LoadedDocument.DocumentElement.ChildNodes)
+                foreach (string path in Directory.GetFiles(SharedObjects.DEFAULT_PRESET_PATH, "*.xml"))
                 {
-                    string XMLFileName = PresetEntryNode["FileName"].Value.ToString();
-                    TimeSpan XMLTimeSpan = TimeSpan.Parse(PresetEntryNode["TimeSpan"].Value.ToString());
-                    BGPreset.AddPresetEntry(new BackgroundPresetEntry(XMLFileName, XMLTimeSpan));
-                }
+                    XmlDocument doc = new XmlDocument();        //collect and locally store presets from file
+                    doc.Load(path);     //presets each have their own files
 
-                SharedObjects.LoadedPresetNames.Add(FileName);
-                if (LoadedDocument["Active"].Value == "1")
-                {
-                    SharedObjects.LastUsedPreset = BGPreset;
+                    string presetName = Path.GetFileNameWithoutExtension(path);
+                    XmlElement root = doc.DocumentElement;
+                    XmlNodeList nodes = root.ChildNodes;
+                    BackgroundPreset LoadedPreset = new BackgroundPreset(Path.GetFileNameWithoutExtension(presetName));
+
+                    for (int i = 0; i < nodes.Count; i++)
+                    {
+                        LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["FilePath"].InnerText, TimeSpan.Parse(nodes[i]["TimeInterval"].InnerText), nodes[i]["EntryID"].InnerText)); //load preset name
+                    }
+                    SharedObjects.ListOfLoadedPresets.Add(LoadedPreset);
                 }
             }
-            #endregion
         }
 
         private void BackgroundDirectoryChangeEvent(object sender, EventArgs e)
