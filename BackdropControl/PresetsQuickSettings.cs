@@ -13,7 +13,6 @@ namespace BackdropControl
 {
     public partial class PresetsQuickSettings : Form
     {
-        //public BindingList<BackgroundPreset> SharedObjects.ListOfLoadedPresets = new BindingList<BackgroundPreset>();
         public string LastUsedPictureFolderDirectory;
         public BindingList<BackgroundPresetEntry> CurrentListViewPresetEntries = new BindingList<BackgroundPresetEntry>();
         public string HighlightedPresetName = string.Empty;
@@ -265,10 +264,6 @@ namespace BackdropControl
                 SelectedPresetListView.Items.Insert(AddedPresetIndex, item);
                 CurrentListViewPresetEntries.Insert(AddedPresetIndex, bpentry);
 
-                //if (SharedObjects.ListOfLoadedPresets.FirstOrDefault(b => b.PresetName == PresetListBox.SelectedItem.ToString()) == null)
-                //    SharedObjects.ListOfLoadedPresets.Add(new BackgroundPreset(HighlightedPresetName));
-                //SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == HighlightedPresetName).AddPresetEntry(bpentry);
-
                 BGPreview.ImageLocation = bpentry.DirectoryPath;
                 ApplyButton.Enabled = true;
             }
@@ -361,22 +356,7 @@ namespace BackdropControl
 
                 else    //implement master class serialized object
                 {
-                    //#region Load directory
-                    //XmlDocument MainSettingsDocument = new XmlDocument();
-                    //MainSettingsDocument.Load(XMLFilePath);
-                    //SelectedBackgroundPicturesFolder = Path.GetFullPath(MainSettingsDocument["BackdropControlMainSettings"].ChildNodes[0].InnerText);
-                    //#endregion
-
-                    //#region Load time interval
-                    //string[] arr = MainSettingsDocument["BackdropControlMainSettings"].ChildNodes[1].InnerText.Split(':');
-                    //this.numHour.Value = new decimal(new int[] { Convert.ToInt32(arr[0]), 0, 0, 0 });
-                    //this.numMin.Value = new decimal(new int[] { Convert.ToInt32(arr[1]), 0, 0, 0 });
-                    //this.numSec.Value = new decimal(new int[] { Convert.ToInt32(arr[2]), 0, 0, 0 });
-                    //this.BackgroundChangeTimer.Interval = (3600000 * Convert.ToInt32(numHour.Value)) + (60000 * Convert.ToInt32(numMin.Value)) + (1000 * Convert.ToInt32(numSec.Value));
-                    //#endregion
-
-                    //watcher.Path = SelectedBackgroundPicturesFolder;
-                    //this.SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
+                    
                 }
             }
         }
