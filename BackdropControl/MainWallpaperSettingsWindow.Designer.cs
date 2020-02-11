@@ -323,6 +323,7 @@ namespace BackdropControl
             this.label6.Size = new System.Drawing.Size(35, 13);
             this.label6.TabIndex = 19;
             this.label6.Text = "label6";
+            this.label6.Visible = false;
             // 
             // StatusLabel
             // 

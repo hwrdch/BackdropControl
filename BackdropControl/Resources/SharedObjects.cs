@@ -15,5 +15,13 @@ namespace BackdropControl.Resources
         public static BindingList<BackgroundPreset> ListOfLoadedPresets;
         public static BackgroundPreset LastUsedPreset;
         public static BindingList<string> LoadedPresetNames;
+
+        static SharedObjects()
+        {
+            DEFAULT_PRESET_PATH = string.Empty;
+            DEFAULT_APP_LOCATION_PATH = string.Empty;
+            ListOfLoadedPresets = new BindingList<BackgroundPreset>();
+            LoadedPresetNames = new BindingList<string>();
+        }
     }
 }

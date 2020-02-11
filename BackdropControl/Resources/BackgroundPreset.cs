@@ -18,7 +18,7 @@ namespace BackdropControl.Resources
 
         public BackgroundPreset(string s)
         {
-            _PresetName = s;
+            PresetName = s;
         }
 
         private List<BackgroundPresetEntry> _PresetEntries = new List<BackgroundPresetEntry>();

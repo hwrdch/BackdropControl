@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace BackdropControl.Resources
 {
-    public static class SerializedData
+    public static class LoadedSerializedData
     {
         public static string MainWallpaperSettingsDirectory;
+        public static TimeSpan MainWallpaperSettingsTimeOfChange;
+        public static List<BackgroundPreset> LoadedSerializedPresets;
     }
 }

@@ -13,14 +13,26 @@ namespace BackdropControl.Resources
         {
             _DirectoryPath = string.Empty;
             TimeOfChange = TimeSpan.MinValue;
+
+            Random random = new Random();
+            EntryID = random.Next(0, sizeof(uint)).ToString();
         }
 
-        public BackgroundPresetEntry (string path, TimeSpan dt)
+        public BackgroundPresetEntry(string path, TimeSpan dt) : this()
         {
             _DirectoryPath = path;
             TimeOfChange = dt;
             _PictureFileName = Path.GetFileName(path);
         }
+        public BackgroundPresetEntry (string path, TimeSpan dt, string id)
+        {
+            _DirectoryPath = path;
+            TimeOfChange = dt;
+            _PictureFileName = Path.GetFileName(path);
+            EntryID = id;
+        }
+
+        public string EntryID;
 
         private string _PictureFileName;
         public string PictureFileName
