@@ -78,6 +78,7 @@ namespace BackdropControl.Resources
                 {
                     PresetEntries[index] = PresetEntries[i];
                     PresetEntries[i] = entry;
+                    PresetEntries[i].ReassignID();
                     return i;
                 }
             }

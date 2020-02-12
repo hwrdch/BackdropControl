@@ -13,9 +13,7 @@ namespace BackdropControl.Resources
         {
             _DirectoryPath = string.Empty;
             TimeOfChange = TimeSpan.MinValue;
-
-            Random random = new Random();
-            EntryID = random.Next(1, 1000000000).ToString();
+            this.ReassignID();
         }
 
         public BackgroundPresetEntry(string path, TimeSpan dt) : this()
@@ -82,6 +80,12 @@ namespace BackdropControl.Resources
         public bool BackgroundExists()
         {
             return (System.IO.Directory.Exists(_DirectoryPath));
+        }
+
+        public void ReassignID()
+        {
+            Random random = new Random();
+            EntryID = random.Next(1, 1000000000).ToString();
         }
     }
 }

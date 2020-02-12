@@ -321,80 +321,94 @@ namespace BackdropControl
                 Directory.CreateDirectory(SharedObjects.DEFAULT_APP_LOCATION_PATH);
             }
 
-            foreach (BackgroundPreset Preset in SharedObjects.ListOfLoadedPresets)
+            List<string> CurrentPresetIDs = SharedObjects.ListOfLoadedPresets.Select(p => p.PresetID).ToList();
+            List<string> LastSavedPresetIDs = LastSavedSerializedData.LoadedSerializedPresets.Select(s => s.PresetID).ToList();
+
+            #region Remove unnecessary presets
+            List<string> PresetsToBeRemoved = new List<string>();
+            foreach (BackgroundPreset LastSavedPreset in LastSavedSerializedData.LoadedSerializedPresets)
             {
-                string XMLFilePath = Path.Combine(SharedObjects.DEFAULT_PRESET_PATH, Preset.PresetName + ".xml");
+                if (!CurrentPresetIDs.Contains(LastSavedPreset.PresetID))
+                    PresetsToBeRemoved.Add(LastSavedPreset.PresetID);
+            }
+
+            foreach (string s in PresetsToBeRemoved)
+                LastSavedSerializedData.LoadedSerializedPresets.RemoveAll(p => p.PresetID == s);
+            #endregion Remove unnecessary presets
+
+            foreach (BackgroundPreset CurrentPreset in SharedObjects.ListOfLoadedPresets)
+            {
+                string XMLFilePath = Path.Combine(SharedObjects.DEFAULT_PRESET_PATH, CurrentPreset.PresetName + ".xml");
 
                 if (!File.Exists(XMLFilePath))
                 {
-                    using (XmlTextWriter writer = new XmlTextWriter(XMLFilePath, null))
-                    {
-                        writer.Formatting = Formatting.Indented;
-                        writer.WriteStartDocument();
-                        writer.WriteStartElement(Preset.PresetName, "");
-                        writer.WriteAttributeString("PresetID", Preset.PresetID);
-                        foreach (BackgroundPresetEntry item in Preset.PresetEntries)
-                        {
-                            writer.WriteStartElement("PresetEntry", "");
-                            writer.WriteElementString("FilePath", item.DirectoryPath);
-                            writer.WriteElementString("TimeInterval", item.GetTimeOfChangeString());
-                            writer.WriteElementString("EntryID", item.EntryID);
-                            writer.WriteEndElement();
-                        }
-                        writer.WriteEndElement();
-                        writer.WriteEndDocument();
-                        writer.Flush();
-                    }
+                    WriteToPresetFile(XMLFilePath, CurrentPreset);
                 }
 
-                else    //implement master class serialized object
+                else
                 {
-                    #region Remove unnecessary presets
-                    List<string> CurrentPresetIDs = SharedObjects.ListOfLoadedPresets.Select(p => p.PresetID).ToList();
-                    List<string> PresetsToBeRemoved = new List<string>();
-                    foreach (BackgroundPreset LastSavedPreset in LastSavedSerializedData.LoadedSerializedPresets)
+                    File.WriteAllText(XMLFilePath, "");
+                    if (!LastSavedPresetIDs.Contains(CurrentPreset.PresetID))
                     {
-                        if (!CurrentPresetIDs.Contains(LastSavedPreset.PresetID))
-                            PresetsToBeRemoved.Add(LastSavedPreset.PresetID);
+                        LastSavedSerializedData.LoadedSerializedPresets.Add(CurrentPreset);
+                        continue;
                     }
-                    
-
-                    foreach (string s in PresetsToBeRemoved)
-                        LastSavedSerializedData.LoadedSerializedPresets.RemoveAll(p => p.PresetID == s);
-                    #endregion Remove unnecessary presets
-
-                    List<string> CommonPresets = CurrentPresetIDs.Union(LastSavedSerializedData.LoadedSerializedPresets.Select(p => p.PresetID).ToList()).ToList();
-                    List<string> PresetsToBeAdded = CurrentPresetIDs.Except(LastSavedSerializedData.LoadedSerializedPresets.Select(p => p.PresetID).ToList()).ToList();
-
-                    foreach (BackgroundPreset preset in LastSavedSerializedData.LoadedSerializedPresets)
+                    else
                     {
-                        List<string> LastSavedEntryIDs = preset.PresetEntries.Select(listentry => listentry.EntryID).ToList();
+                        #region Edit common presets
+                        List<string> LastSavedEntryIDs = CurrentPreset.PresetEntries.Select(listentry => listentry.EntryID).ToList();
 
                         #region Remove unnecessary entries
-                        List<string> CurrentPresetEntryIDs = SharedObjects.ListOfLoadedPresets
-                                                                    .FirstOrDefault(s => s.PresetID == preset.PresetID).PresetEntries
-                                                                            .Select(s => s.EntryID).ToList();
                         List<string> PresetEntriesToBeRemoved = new List<string>();
-                        foreach (BackgroundPresetEntry entry in preset.PresetEntries)
+                        foreach (BackgroundPresetEntry entry in CurrentPreset.PresetEntries)
                         {
-                            if (!CurrentPresetEntryIDs.Contains(entry.EntryID))
+                            if (!CurrentPresetIDs.Contains(entry.EntryID))
                                 PresetEntriesToBeRemoved.Add(entry.EntryID);
                         }
-                        foreach (string s in LastSavedEntryIDs)
-                            preset.RemoveEntry(s);
+                        foreach (string s in PresetEntriesToBeRemoved)
+                        {
+                            LastSavedSerializedData.LoadedSerializedPresets.FirstOrDefault(item => item.PresetID == CurrentPreset.PresetID).RemoveEntry(s);
+                        }
                         #endregion
 
-                        List<string> PresetEntriesToBeAdded = LastSavedEntryIDs.Except(preset.PresetEntries.Select(s => s.EntryID).ToList()).ToList();
-                        //checkpoint
+                        List<string> PresetEntriesToBeAdded = LastSavedEntryIDs.Except(CurrentPreset.PresetEntries.Select(s => s.EntryID).ToList()).ToList();
+                        foreach (string s in PresetEntriesToBeAdded)
+                        {
+                            LastSavedSerializedData.LoadedSerializedPresets.FirstOrDefault(item => item.PresetID == CurrentPreset.PresetID)
+                                .AddPresetEntry(CurrentPreset.PresetEntries.FirstOrDefault(entry => entry.EntryID == s));
+                        }
+                        #endregion
                     }
+                    WriteToPresetFile(XMLFilePath, CurrentPreset);
                 }
+            }
+        }
+
+        private void WriteToPresetFile(string XMLFilePath, BackgroundPreset CurrentPreset)
+        {
+            using (XmlTextWriter writer = new XmlTextWriter(XMLFilePath, null))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartDocument();
+                writer.WriteStartElement(CurrentPreset.PresetName, "");
+                writer.WriteAttributeString("PresetID", CurrentPreset.PresetID);
+                foreach (BackgroundPresetEntry item in CurrentPreset.PresetEntries)
+                {
+                    writer.WriteStartElement("PresetEntry", "");
+                    writer.WriteElementString("FilePath", item.DirectoryPath);
+                    writer.WriteElementString("TimeInterval", item.GetTimeOfChangeString());
+                    writer.WriteElementString("EntryID", item.EntryID);
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
             }
         }
 
         private void PresetSettingsCancel(object sender, EventArgs e)
         {
-            //Done after master class of serialized objects is done.
-            throw new NotImplementedException();
+            this.Close();
         }
     }
 }
