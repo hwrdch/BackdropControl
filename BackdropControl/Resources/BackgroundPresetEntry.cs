@@ -15,7 +15,7 @@ namespace BackdropControl.Resources
             TimeOfChange = TimeSpan.MinValue;
 
             Random random = new Random();
-            EntryID = random.Next(0, sizeof(uint)).ToString();
+            EntryID = random.Next(1, 1000000000).ToString();
         }
 
         public BackgroundPresetEntry(string path, TimeSpan dt) : this()

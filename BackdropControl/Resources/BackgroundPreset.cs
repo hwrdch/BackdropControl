@@ -9,6 +9,13 @@ namespace BackdropControl.Resources
 {
     public class BackgroundPreset
     {
+        private string _PresetID = string.Empty;
+        public string PresetID
+        {
+            get { return _PresetID; }
+            set { _PresetID = value; }
+        }
+
         private string _PresetName = string.Empty;
         public string PresetName
         {
@@ -19,6 +26,15 @@ namespace BackdropControl.Resources
         public BackgroundPreset(string s)
         {
             PresetName = s;
+
+            Random random = new Random();
+            PresetID = random.Next(1, 1000000000).ToString();
+        }
+
+        public BackgroundPreset(string s, string id)
+        {
+            PresetName = s;
+            PresetID = id;
         }
 
         private List<BackgroundPresetEntry> _PresetEntries = new List<BackgroundPresetEntry>();
@@ -70,11 +86,11 @@ namespace BackdropControl.Resources
         public void RemovePreset(TimeSpan ts)
         {
             PresetEntries.RemoveAll(bp => bp.TimeOfChange == ts);
-            //PresetEntries.RemoveAt(index);
-            //for (int i = index; i < PresetEntries.Count(); i++)
-            //{
-            //    PresetEntries[i].PresetIndex -= 1;
-            //}
+        }
+
+        public void RemoveEntry(string id)
+        {
+            PresetEntries.RemoveAll(bp => bp.EntryID == id);
         }
 
         public bool IsPresetEmpty()

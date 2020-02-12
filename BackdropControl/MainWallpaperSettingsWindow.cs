@@ -24,10 +24,9 @@ namespace BackdropControl
         public MainWallpaperSettingsWindow()
         {
             InitializeComponent();
-            PicturesPool = new List<string>(); iter = 0;    //Load Main Wallpaper Settings
+            PicturesPool = new List<string>(); iter = 0;
             LoadMainWallpaperSettings();
 
-            //LoadPresetsFromPath();  //Load Presets Settings
             SharedObjects.DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl", "BackdropControl Presets");
             if (SelectedBackgroundPicturesFolder == "" || SelectedBackgroundPicturesFolder == null)
                 BackgroundChangeTimer.Enabled = false;
@@ -75,6 +74,7 @@ namespace BackdropControl
                     XmlDocument MainSettingsDocument = new XmlDocument();
                     MainSettingsDocument.Load(XMLFilePath);
                     SelectedBackgroundPicturesFolder = Path.GetFullPath(MainSettingsDocument["BackdropControlMainSettings"].ChildNodes[0].InnerText);
+                    LastSavedSerializedData.MainWallpaperSettingsDirectory = SelectedBackgroundPicturesFolder;
                     #endregion
 
                     #region Load time interval
@@ -83,6 +83,10 @@ namespace BackdropControl
                     this.numMin.Value = new decimal(new int[] { Convert.ToInt32(arr[1]), 0, 0, 0 });
                     this.numSec.Value = new decimal(new int[] { Convert.ToInt32(arr[2]), 0, 0, 0 });
                     this.BackgroundChangeTimer.Interval = (3600000 * Convert.ToInt32(numHour.Value)) + (60000 * Convert.ToInt32(numMin.Value)) + (1000 * Convert.ToInt32(numSec.Value));
+                    LastSavedSerializedData.MainWallpaperSettingsTimeOfChange = TimeSpan.FromSeconds
+                        ((Convert.ToDouble(this.numHour.Value)* 3600) + 
+                            (Convert.ToDouble(this.numMin.Value) * 60) + 
+                                (Convert.ToDouble(this.numSec.Value)));
                     #endregion
 
                     watcher.Path = SelectedBackgroundPicturesFolder;
@@ -125,12 +129,17 @@ namespace BackdropControl
                     string presetName = Path.GetFileNameWithoutExtension(path);
                     XmlElement root = doc.DocumentElement;
                     XmlNodeList nodes = root.ChildNodes;
-                    BackgroundPreset LoadedPreset = new BackgroundPreset(Path.GetFileNameWithoutExtension(presetName));
+                    BackgroundPreset LoadedPreset = new BackgroundPreset(Path.GetFileNameWithoutExtension(presetName), root.GetAttribute("PresetID"));
+                    BackgroundPreset LastSavedPreset = new BackgroundPreset(Path.GetFileNameWithoutExtension(presetName), root.GetAttribute("PresetID"));
 
                     for (int i = 0; i < nodes.Count; i++)
                     {
-                        LoadedPreset.AddPresetEntry(new BackgroundPresetEntry(nodes[i]["FilePath"].InnerText, TimeSpan.Parse(nodes[i]["TimeInterval"].InnerText), nodes[i]["EntryID"].InnerText)); //load preset name
+                        BackgroundPresetEntry PresetEntry = new BackgroundPresetEntry(nodes[i]["FilePath"].InnerText, TimeSpan.Parse(nodes[i]["TimeInterval"].InnerText), nodes[i]["EntryID"].InnerText);
+                        LoadedPreset.AddPresetEntry(PresetEntry);
+                        LastSavedPreset.AddPresetEntry(PresetEntry);
                     }
+
+                    LastSavedSerializedData.LoadedSerializedPresets.Add(LastSavedPreset);
                     SharedObjects.ListOfLoadedPresets.Add(LoadedPreset);
                 }
             }
@@ -152,6 +161,8 @@ namespace BackdropControl
                 SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
                 MainSettingsApplyButton.Enabled = true;
             }
+
+            SharedObjects.SELECTED_MAIN_SETTINGS_PATH = SelectedBackgroundPicturesFolder;
         }
         private void SetBackgroundPicture(string file)
         {

@@ -12,6 +12,8 @@ namespace BackdropControl.Resources
     {
         public static string DEFAULT_PRESET_PATH;
         public static string DEFAULT_APP_LOCATION_PATH;
+
+        public static string SELECTED_MAIN_SETTINGS_PATH;
         public static BindingList<BackgroundPreset> ListOfLoadedPresets;
         public static BackgroundPreset LastUsedPreset;
         public static BindingList<string> LoadedPresetNames;

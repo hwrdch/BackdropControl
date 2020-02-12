@@ -1,0 +1,3 @@
+Alphabetize list when entry time is adjusted
+Press escape to cancel empty preset text box
+Run wallpaper changer functions in async

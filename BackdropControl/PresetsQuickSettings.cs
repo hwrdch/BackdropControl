@@ -45,14 +45,6 @@ namespace BackdropControl
 
                 PresetListBox.Items.Add(backgroundPreset);
                 List<BackgroundPresetEntry> EntryList = backgroundPreset.GetPresetEntries();
-                for (int j = 0; j < backgroundPreset.PresetEntries.Count; j++) 
-                {
-                    ListViewItem item = new ListViewItem(EntryList[j].PictureFileName);
-                    item.SubItems.Add(EntryList[j].GetTimeOfChangeString());
-
-                    SelectedPresetListView.Items.Insert(j, item);
-                    CurrentListViewPresetEntries.Insert(j, EntryList[j]);
-                }
             }
         }
 
@@ -303,7 +295,7 @@ namespace BackdropControl
             SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[0].Text = tsw.EditedPresetEntry.PictureFileName;
             SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[1].Text = tsw.EditedPresetEntry.GetTimeOfChangeString();
 
-            int x = SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == PresetListBox.SelectedItem.ToString()).EditPresetEntry(CurrentListViewPresetEntries[tsw.EditedPresetEntryIndex], tsw.EditedPresetEntryIndex);
+            int x = SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == HighlightedPresetName).EditPresetEntry(CurrentListViewPresetEntries[tsw.EditedPresetEntryIndex], tsw.EditedPresetEntryIndex);
         }
 
         private void RightClick2DeleteWallpaper(object sender, EventArgs e)
@@ -340,6 +332,7 @@ namespace BackdropControl
                         writer.Formatting = Formatting.Indented;
                         writer.WriteStartDocument();
                         writer.WriteStartElement(Preset.PresetName, "");
+                        writer.WriteAttributeString("PresetID", Preset.PresetID);
                         foreach (BackgroundPresetEntry item in Preset.PresetEntries)
                         {
                             writer.WriteStartElement("PresetEntry", "");
@@ -356,7 +349,44 @@ namespace BackdropControl
 
                 else    //implement master class serialized object
                 {
+                    #region Remove unnecessary presets
+                    List<string> CurrentPresetIDs = SharedObjects.ListOfLoadedPresets.Select(p => p.PresetID).ToList();
+                    List<string> PresetsToBeRemoved = new List<string>();
+                    foreach (BackgroundPreset LastSavedPreset in LastSavedSerializedData.LoadedSerializedPresets)
+                    {
+                        if (!CurrentPresetIDs.Contains(LastSavedPreset.PresetID))
+                            PresetsToBeRemoved.Add(LastSavedPreset.PresetID);
+                    }
                     
+
+                    foreach (string s in PresetsToBeRemoved)
+                        LastSavedSerializedData.LoadedSerializedPresets.RemoveAll(p => p.PresetID == s);
+                    #endregion Remove unnecessary presets
+
+                    List<string> CommonPresets = CurrentPresetIDs.Union(LastSavedSerializedData.LoadedSerializedPresets.Select(p => p.PresetID).ToList()).ToList();
+                    List<string> PresetsToBeAdded = CurrentPresetIDs.Except(LastSavedSerializedData.LoadedSerializedPresets.Select(p => p.PresetID).ToList()).ToList();
+
+                    foreach (BackgroundPreset preset in LastSavedSerializedData.LoadedSerializedPresets)
+                    {
+                        List<string> LastSavedEntryIDs = preset.PresetEntries.Select(listentry => listentry.EntryID).ToList();
+
+                        #region Remove unnecessary entries
+                        List<string> CurrentPresetEntryIDs = SharedObjects.ListOfLoadedPresets
+                                                                    .FirstOrDefault(s => s.PresetID == preset.PresetID).PresetEntries
+                                                                            .Select(s => s.EntryID).ToList();
+                        List<string> PresetEntriesToBeRemoved = new List<string>();
+                        foreach (BackgroundPresetEntry entry in preset.PresetEntries)
+                        {
+                            if (!CurrentPresetEntryIDs.Contains(entry.EntryID))
+                                PresetEntriesToBeRemoved.Add(entry.EntryID);
+                        }
+                        foreach (string s in LastSavedEntryIDs)
+                            preset.RemoveEntry(s);
+                        #endregion
+
+                        List<string> PresetEntriesToBeAdded = LastSavedEntryIDs.Except(preset.PresetEntries.Select(s => s.EntryID).ToList()).ToList();
+                        //checkpoint
+                    }
                 }
             }
         }
