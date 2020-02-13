@@ -107,6 +107,11 @@ namespace BackdropControl.Resources
             return list;
         }
 
+        public BackgroundPresetEntry GetPresetEntry(string ImageName)
+        {
+            return PresetEntries.FirstOrDefault(e => e.PictureFileName == ImageName);
+        }
+
         public List<BackgroundPresetEntry> GetPresetEntries()
         {
             return PresetEntries;

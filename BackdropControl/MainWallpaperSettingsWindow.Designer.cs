@@ -86,7 +86,7 @@ namespace BackdropControl
             // 
             // BackgroundChangeTimer
             // 
-            this.BackgroundChangeTimer.Tick += new System.EventHandler(this.BackgroundTimerEvent);
+            this.BackgroundChangeTimer.Tick += new System.EventHandler(this.DirectoryMoveToNextEvent);
             // 
             // SelectedFolderLabel
             // 
@@ -304,6 +304,7 @@ namespace BackdropControl
             this.MainSettingsPagePresetComboBox.Size = new System.Drawing.Size(156, 21);
             this.MainSettingsPagePresetComboBox.TabIndex = 17;
             this.MainSettingsPagePresetComboBox.Enabled = false;
+            this.MainSettingsPagePresetComboBox.SelectedValueChanged += new EventHandler(this.PresetComboBoxValueChangedEvent);
             // 
             // OpenPresetsSettingsButton
             // 

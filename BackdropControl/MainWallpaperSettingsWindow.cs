@@ -21,7 +21,7 @@ namespace BackdropControl
 
         private List<string> ImagePool;
         private int ImagePoolIndex;
-
+        private BackgroundPreset SelectedPreset;
 
         public MainWallpaperSettingsWindow()
         {
@@ -153,6 +153,7 @@ namespace BackdropControl
 
                     LastSerializedData.LoadedSerializedPresets.Add(LastSavedPreset);
                     SharedObjects.ListOfLoadedPresets.Add(LoadedPreset);
+                    MainSettingsPagePresetComboBox.Items.Add(LoadedPreset.PresetName);
                 }
             }
         }
@@ -192,47 +193,58 @@ namespace BackdropControl
             internal static extern int SystemParametersInfo(int uAction, int uParam, String lpvParam, int fuWinIni);
         }
 
-        private void BackgroundTimerEvent(object sender, EventArgs e)
+        private void DirectoryMoveToNextEvent(object sender, EventArgs e)
         {
-            if (!Directory.Exists(SelectedBackgroundPicturesFolder))
+            if (DirectorySelectOption.Checked == true)
             {
-                ImagePool.Clear();
-                LoadMainWallpaperSettings();
+                if (!Directory.Exists(SelectedBackgroundPicturesFolder))
+                {
+                    ImagePool.Clear();
+                    LoadMainWallpaperSettings();
+                }
+                else
+                {
+                    if (ImagePool.Count() != 0)
+                    {
+                        if (ImagePoolIndex == 0)
+                        {
+                            SetBackgroundPicture(ImagePool[0]);
+                            ImagePoolIndex++;
+                        }
+                        else if (ImagePoolIndex < ImagePool.Count())
+                        {
+                            SetBackgroundPicture(ImagePool[ImagePoolIndex]);
+                            ImagePoolIndex++;
+                        }
+                        else
+                        {
+                            ImagePoolIndex = 0;
+                            SetBackgroundPicture(ImagePool[ImagePoolIndex]);
+                        }
+                    }
+                }
             }
             else
-            {
-                TimelyWallpaperChange();
-            }
-        }
-
-        private void TimelyWallpaperChange()
-        {
-            if (ImagePool.Count() != 0)
             {
                 if (ImagePoolIndex == 0)
                 {
                     SetBackgroundPicture(ImagePool[0]);
                     ImagePoolIndex++;
+                    SetPresetTimerEvent(DateTime.Parse(SelectedPreset.GetPresetEntries().ElementAt(ImagePoolIndex).GetTimeOfChangeString())) ;
                 }
                 else if (ImagePoolIndex < ImagePool.Count())
                 {
                     SetBackgroundPicture(ImagePool[ImagePoolIndex]);
                     ImagePoolIndex++;
+                    SetPresetTimerEvent(DateTime.Parse(SelectedPreset.GetPresetEntries().ElementAt(ImagePoolIndex).GetTimeOfChangeString()));
                 }
                 else
                 {
                     ImagePoolIndex = 0;
                     SetBackgroundPicture(ImagePool[ImagePoolIndex]);
+                    SetPresetTimerEvent(DateTime.Parse(SelectedPreset.GetPresetEntries().ElementAt(0).GetTimeOfChangeString()));
                 }
             }
-        }
-
-        private void watcher_Created(object sender, FileSystemEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("File: " + e.FullPath);
-            string ext = Path.GetExtension(e.FullPath);
-            if (ext == "png" || ext == "jpg" || ext == "jpeg")
-                ImagePool.Add(e.FullPath);
         }
 
         private void PictureCheck(string filepath)
@@ -246,6 +258,14 @@ namespace BackdropControl
             {
                 ImagePool.Add(filepath);
             }
+        }
+
+        private void watcher_Created(object sender, FileSystemEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("File: " + e.FullPath);
+            string ext = Path.GetExtension(e.FullPath);
+            if (ext == "png" || ext == "jpg" || ext == "jpeg")
+                ImagePool.Add(e.FullPath);
         }
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
@@ -329,6 +349,7 @@ namespace BackdropControl
             MainSettingsApplyButton.Enabled = false;
             this.Hide();
             notifyIcon1.Visible = true;
+            Application.Exit();
         }
 
         private void closeForm(object sender, FormClosingEventArgs e)
@@ -358,7 +379,6 @@ namespace BackdropControl
         {
             MainSettingsApplyButton.Enabled = true;
         }
-
 
         public static bool CheckPicture(byte[] bytes)
         {
@@ -413,6 +433,25 @@ namespace BackdropControl
             OpenPresetsSettingsButton.Enabled = true;
         }
 
+        private void greyOutMode2()
+        {
+            DirectorySelectOption.Checked = true;
+            SelectedFolderLabel.Enabled = true;
+            BGchange.Enabled = true;
+            label2.Enabled = true;
+            numHour.Enabled = true;
+            numMin.Enabled = true;
+            numSec.Enabled = true;
+            label1.Enabled = true;
+            label3.Enabled = true;
+            label4.Enabled = true;
+
+            PresetSettingSelectOption.Checked = false;
+            SelectedPresetLabel.Enabled = false;
+            MainSettingsPagePresetComboBox.Enabled = false;
+            OpenPresetsSettingsButton.Enabled = false;
+        }
+
         private void BackgroundOptionChanged(object sender, EventArgs e)
         {
             if (DirectorySelectOption.Checked == true)
@@ -436,27 +475,8 @@ namespace BackdropControl
                 BackgroundChangeTimer.Dispose();
                 ImagePoolIndex = 0;
 
-                SetTimerEvent(DateTime.Parse(SharedObjects.ListOfLoadedPresets[0].GetPresetEntries().ElementAt(0).GetTimeOfChangeString()));
+                SetPresetTimerEvent(DateTime.Parse(SharedObjects.ListOfLoadedPresets[0].GetPresetEntries().ElementAt(0).GetTimeOfChangeString()));
             }
-        }
-
-        private void greyOutMode2()
-        {
-            DirectorySelectOption.Checked = true;
-            SelectedFolderLabel.Enabled = true;
-            BGchange.Enabled = true;
-            label2.Enabled = true;
-            numHour.Enabled = true;
-            numMin.Enabled = true;
-            numSec.Enabled = true;
-            label1.Enabled = true;
-            label3.Enabled = true;
-            label4.Enabled = true;
-
-            PresetSettingSelectOption.Checked = false;
-            SelectedPresetLabel.Enabled = false;
-            MainSettingsPagePresetComboBox.Enabled = false;
-            OpenPresetsSettingsButton.Enabled = false;
         }
 
         private void OpenPresetsSettingsEvent(object sender, EventArgs e)
@@ -472,7 +492,7 @@ namespace BackdropControl
                 MainSettingsPagePresetComboBox.Items.Add(preset.PresetName);
         }
 
-        private void SetTimerEvent(DateTime PresetEntryTime)
+        private void SetPresetTimerEvent(DateTime PresetEntryTime)
         {
             BackgroundChangeTimer.Stop();
             BackgroundChangeTimer.Dispose();
@@ -481,7 +501,24 @@ namespace BackdropControl
                 BackgroundChangeTimer.Interval = (PresetEntryTime.Second + (24 * 60 * 60)) - DateTime.Now.Second;
             else
                 BackgroundChangeTimer.Interval = PresetEntryTime.Second - DateTime.Now.Second;
-            //checkpoint
+        }
+
+        private void PresetComboBoxValueChangedEvent(object sender, EventArgs e)
+        {
+            BackgroundChangeTimer.Stop();
+            BackgroundChangeTimer.Dispose();
+
+            SelectedPreset = LastSerializedData.LoadedSerializedPresets.FirstOrDefault(p => p.PresetName == MainSettingsPagePresetComboBox.SelectedItem.ToString());
+            ImagePool.Clear();
+
+            ImagePoolIndex = 0;
+
+            foreach (BackgroundPresetEntry entry in SelectedPreset.GetPresetEntries())
+            {
+                if (DateTime.Now < DateTime.Parse(entry.GetTimeOfChangeString()))
+                    ImagePoolIndex++;
+                ImagePool.Add(entry.DirectoryPath);
+            }
         }
     }
 }

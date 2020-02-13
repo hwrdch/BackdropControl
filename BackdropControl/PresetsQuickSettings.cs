@@ -182,6 +182,8 @@ namespace BackdropControl
                     preset.PresetName = PresetName;
                     PresetListBox.Items.RemoveAt(SelectedPresetIndex);
                     PresetListBox.Items.Insert(SelectedPresetIndex, preset);
+                    SharedObjects.ListOfLoadedPresets.FirstOrDefault(p => p.PresetName == preset.PresetName).PresetName = RenamePresetBox.Text;
+
                     RenamePresetBox.Text = string.Empty;
                 }
                 else
@@ -280,6 +282,7 @@ namespace BackdropControl
                 BGPreview.ImageLocation = bpentry.DirectoryPath;
 
                 int x = SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == PresetListBox.SelectedItem.ToString()).EditPresetEntry(bpentry, SelectedPresetListView.SelectedIndices[0]);
+                ApplyButton.Enabled = true;
             }
         }
 
@@ -296,6 +299,7 @@ namespace BackdropControl
             SelectedPresetListView.Items[tsw.EditedPresetEntryIndex].SubItems[1].Text = tsw.EditedPresetEntry.GetTimeOfChangeString();
 
             int x = SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == HighlightedPresetName).EditPresetEntry(CurrentListViewPresetEntries[tsw.EditedPresetEntryIndex], tsw.EditedPresetEntryIndex);
+            ApplyButton.Enabled = true;
         }
 
         private void RightClick2DeleteWallpaper(object sender, EventArgs e)
@@ -311,6 +315,8 @@ namespace BackdropControl
 
             SharedObjects.ListOfLoadedPresets.First<BackgroundPreset>(bp => bp.PresetName == HighlightedPresetName).RemovePreset(SelectedPreset.TimeOfChange);
             BGPreview.ImageLocation = null;
+
+            ApplyButton.Enabled = true;
         }
 
         private void SerializePresetSettings(object sender, EventArgs e)
