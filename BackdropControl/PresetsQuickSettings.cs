@@ -322,18 +322,18 @@ namespace BackdropControl
             }
 
             List<string> CurrentPresetIDs = SharedObjects.ListOfLoadedPresets.Select(p => p.PresetID).ToList();
-            List<string> LastSavedPresetIDs = LastSavedSerializedData.LoadedSerializedPresets.Select(s => s.PresetID).ToList();
+            List<string> LastSavedPresetIDs = LastSerializedData.LoadedSerializedPresets.Select(s => s.PresetID).ToList();
 
             #region Remove unnecessary presets
             List<string> PresetsToBeRemoved = new List<string>();
-            foreach (BackgroundPreset LastSavedPreset in LastSavedSerializedData.LoadedSerializedPresets)
+            foreach (BackgroundPreset LastSavedPreset in LastSerializedData.LoadedSerializedPresets)
             {
                 if (!CurrentPresetIDs.Contains(LastSavedPreset.PresetID))
                     PresetsToBeRemoved.Add(LastSavedPreset.PresetID);
             }
 
             foreach (string s in PresetsToBeRemoved)
-                LastSavedSerializedData.LoadedSerializedPresets.RemoveAll(p => p.PresetID == s);
+                LastSerializedData.LoadedSerializedPresets.RemoveAll(p => p.PresetID == s);
             #endregion Remove unnecessary presets
 
             foreach (BackgroundPreset CurrentPreset in SharedObjects.ListOfLoadedPresets)
@@ -350,7 +350,7 @@ namespace BackdropControl
                     File.WriteAllText(XMLFilePath, "");
                     if (!LastSavedPresetIDs.Contains(CurrentPreset.PresetID))
                     {
-                        LastSavedSerializedData.LoadedSerializedPresets.Add(CurrentPreset);
+                        LastSerializedData.LoadedSerializedPresets.Add(CurrentPreset);
                         continue;
                     }
                     else
@@ -367,14 +367,14 @@ namespace BackdropControl
                         }
                         foreach (string s in PresetEntriesToBeRemoved)
                         {
-                            LastSavedSerializedData.LoadedSerializedPresets.FirstOrDefault(item => item.PresetID == CurrentPreset.PresetID).RemoveEntry(s);
+                            LastSerializedData.LoadedSerializedPresets.FirstOrDefault(item => item.PresetID == CurrentPreset.PresetID).RemoveEntry(s);
                         }
                         #endregion
 
                         List<string> PresetEntriesToBeAdded = LastSavedEntryIDs.Except(CurrentPreset.PresetEntries.Select(s => s.EntryID).ToList()).ToList();
                         foreach (string s in PresetEntriesToBeAdded)
                         {
-                            LastSavedSerializedData.LoadedSerializedPresets.FirstOrDefault(item => item.PresetID == CurrentPreset.PresetID)
+                            LastSerializedData.LoadedSerializedPresets.FirstOrDefault(item => item.PresetID == CurrentPreset.PresetID)
                                 .AddPresetEntry(CurrentPreset.PresetEntries.FirstOrDefault(entry => entry.EntryID == s));
                         }
                         #endregion

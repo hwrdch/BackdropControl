@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Resources\LoadedSerializedData.cs" />
+    <Compile Include="Resources\LastSerializedData.cs" />
     <Compile Include="Resources\SharedObjects.cs" />
     <Compile Include="TimeSelectWindow.cs">
       <SubType>Form</SubType>

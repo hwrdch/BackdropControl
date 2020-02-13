@@ -59,10 +59,10 @@ namespace BackdropControl
             this.exitStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.timeLim = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.label5 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.DirectorySelectOption = new System.Windows.Forms.RadioButton();
+            this.PresetSettingSelectOption = new System.Windows.Forms.RadioButton();
+            this.SelectedPresetLabel = new System.Windows.Forms.Label();
+            this.MainSettingsPagePresetComboBox = new System.Windows.Forms.ComboBox();
             this.OpenPresetsSettingsButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
@@ -259,49 +259,51 @@ namespace BackdropControl
             // 
             // radioButton1
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(35, 28);
-            this.radioButton1.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(86, 17);
-            this.radioButton1.TabIndex = 14;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Single Folder";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            this.DirectorySelectOption.AutoSize = true;
+            this.DirectorySelectOption.Checked = true;
+            this.DirectorySelectOption.Location = new System.Drawing.Point(35, 28);
+            this.DirectorySelectOption.Margin = new System.Windows.Forms.Padding(2);
+            this.DirectorySelectOption.Name = "radioButton1";
+            this.DirectorySelectOption.Size = new System.Drawing.Size(86, 17);
+            this.DirectorySelectOption.TabIndex = 14;
+            this.DirectorySelectOption.TabStop = true;
+            this.DirectorySelectOption.Text = "Single Directory";
+            this.DirectorySelectOption.UseVisualStyleBackColor = true;
+            this.DirectorySelectOption.CheckedChanged += new System.EventHandler(this.BackgroundOptionChanged);
             // 
             // radioButton2
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(35, 119);
-            this.radioButton2.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(108, 17);
-            this.radioButton2.TabIndex = 15;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Custom Schedule";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.PresetSettingSelectOption.AutoSize = true;
+            this.PresetSettingSelectOption.Location = new System.Drawing.Point(35, 119);
+            this.PresetSettingSelectOption.Margin = new System.Windows.Forms.Padding(2);
+            this.PresetSettingSelectOption.Name = "radioButton2";
+            this.PresetSettingSelectOption.Size = new System.Drawing.Size(108, 17);
+            this.PresetSettingSelectOption.TabIndex = 15;
+            this.PresetSettingSelectOption.TabStop = true;
+            this.PresetSettingSelectOption.Text = "Custom Schedule";
+            this.PresetSettingSelectOption.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(66, 153);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(93, 15);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Selected Preset";
+            this.SelectedPresetLabel.AutoSize = true;
+            this.SelectedPresetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SelectedPresetLabel.Location = new System.Drawing.Point(66, 153);
+            this.SelectedPresetLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.SelectedPresetLabel.Name = "label5";
+            this.SelectedPresetLabel.Size = new System.Drawing.Size(93, 15);
+            this.SelectedPresetLabel.TabIndex = 16;
+            this.SelectedPresetLabel.Text = "Selected Preset";
+            this.SelectedPresetLabel.Enabled = false;
             // 
             // comboBox1
             // 
-            this.comboBox1.Location = new System.Drawing.Point(262, 153);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox1.MaxDropDownItems = 10;
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(156, 21);
-            this.comboBox1.TabIndex = 17;
+            this.MainSettingsPagePresetComboBox.Location = new System.Drawing.Point(262, 153);
+            this.MainSettingsPagePresetComboBox.Margin = new System.Windows.Forms.Padding(2);
+            this.MainSettingsPagePresetComboBox.MaxDropDownItems = 10;
+            this.MainSettingsPagePresetComboBox.Name = "comboBox1";
+            this.MainSettingsPagePresetComboBox.Size = new System.Drawing.Size(156, 21);
+            this.MainSettingsPagePresetComboBox.TabIndex = 17;
+            this.MainSettingsPagePresetComboBox.Enabled = false;
             // 
             // OpenPresetsSettingsButton
             // 
@@ -313,6 +315,7 @@ namespace BackdropControl
             this.OpenPresetsSettingsButton.TabIndex = 18;
             this.OpenPresetsSettingsButton.Text = "Edit Presets";
             this.OpenPresetsSettingsButton.UseVisualStyleBackColor = true;
+            this.OpenPresetsSettingsButton.Enabled = false;
             this.OpenPresetsSettingsButton.Click += new System.EventHandler(this.OpenPresetsSettingsEvent);
             // 
             // label6
@@ -343,10 +346,10 @@ namespace BackdropControl
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.OpenPresetsSettingsButton);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.radioButton2);
-            this.Controls.Add(this.radioButton1);
+            this.Controls.Add(this.MainSettingsPagePresetComboBox);
+            this.Controls.Add(this.SelectedPresetLabel);
+            this.Controls.Add(this.PresetSettingSelectOption);
+            this.Controls.Add(this.DirectorySelectOption);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.MainSettingsApplyButton);
             this.Controls.Add(this.label4);
@@ -371,7 +374,6 @@ namespace BackdropControl
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
@@ -393,10 +395,10 @@ namespace BackdropControl
         private System.Windows.Forms.ToolStripMenuItem exitStrip;
         private ToolTip timeLim;
         private Button button1;
-        private RadioButton radioButton2;
-        private RadioButton radioButton1;
-        private ComboBox comboBox1;
-        private Label label5;
+        private RadioButton PresetSettingSelectOption;
+        private RadioButton DirectorySelectOption;
+        private ComboBox MainSettingsPagePresetComboBox;
+        private Label SelectedPresetLabel;
         private Button OpenPresetsSettingsButton;
         private Label StatusLabel;
         private Label label6;

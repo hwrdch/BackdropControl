@@ -301,7 +301,6 @@ namespace BackdropControl
             this.EditPresetMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

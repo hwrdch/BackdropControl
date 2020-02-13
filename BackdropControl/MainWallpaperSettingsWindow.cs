@@ -16,15 +16,17 @@ namespace BackdropControl
     public partial class MainWallpaperSettingsWindow : Form
     {
         private string SelectedBackgroundPicturesFolder;
+        PresetsQuickSettings PresetSettingsWindow;
         private string LastUsedWallpaperDirectory;
-        private List<string> PicturesPool;
 
-        private int iter;
+        private List<string> ImagePool;
+        private int ImagePoolIndex;
+
 
         public MainWallpaperSettingsWindow()
         {
             InitializeComponent();
-            PicturesPool = new List<string>(); iter = 0;
+            ImagePool = new List<string>(); ImagePoolIndex = 0;
             LoadMainWallpaperSettings();
 
             SharedObjects.DEFAULT_PRESET_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl", "BackdropControl Presets");
@@ -34,6 +36,8 @@ namespace BackdropControl
                 BackgroundChangeTimer.Enabled = true;
 
             LoadPresetsFromPath();
+            PresetSettingsWindow = new PresetsQuickSettings();
+            PresetSettingsWindow.FormClosed += new FormClosedEventHandler(this.PresetSettingsWindowClosed);
         }
 
         private void LoadMainWallpaperSettings()
@@ -74,27 +78,26 @@ namespace BackdropControl
                     XmlDocument MainSettingsDocument = new XmlDocument();
                     MainSettingsDocument.Load(XMLFilePath);
                     SelectedBackgroundPicturesFolder = Path.GetFullPath(MainSettingsDocument["BackdropControlMainSettings"].ChildNodes[0].InnerText);
-                    LastSavedSerializedData.MainWallpaperSettingsDirectory = SelectedBackgroundPicturesFolder;
+                    LastSerializedData.MainWallpaperSettingsDirectory = SelectedBackgroundPicturesFolder;
                     #endregion
 
-                    #region Load time interval
                     string[] arr = MainSettingsDocument["BackdropControlMainSettings"].ChildNodes[1].InnerText.Split(':');
                     this.numHour.Value = new decimal(new int[] { Convert.ToInt32(arr[0]), 0, 0, 0 });
                     this.numMin.Value = new decimal(new int[] { Convert.ToInt32(arr[1]), 0, 0, 0 });
                     this.numSec.Value = new decimal(new int[] { Convert.ToInt32(arr[2]), 0, 0, 0 });
+
                     this.BackgroundChangeTimer.Interval = (3600000 * Convert.ToInt32(numHour.Value)) + (60000 * Convert.ToInt32(numMin.Value)) + (1000 * Convert.ToInt32(numSec.Value));
-                    LastSavedSerializedData.MainWallpaperSettingsTimeOfChange = TimeSpan.FromSeconds
-                        ((Convert.ToDouble(this.numHour.Value)* 3600) + 
-                            (Convert.ToDouble(this.numMin.Value) * 60) + 
+                    LastSerializedData.MainWallpaperSettingsTimeOfChange = TimeSpan.FromSeconds
+                        ((Convert.ToDouble(this.numHour.Value) * 3600) +
+                            (Convert.ToDouble(this.numMin.Value) * 60) +
                                 (Convert.ToDouble(this.numSec.Value)));
-                    #endregion
 
                     watcher.Path = SelectedBackgroundPicturesFolder;
                     this.SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
                 }
 
                 this.MainSettingsApplyButton.Enabled = false;
-                LoadToPicturesPool();
+                LoadToImagePool();
                 LastUsedWallpaperDirectory = SelectedBackgroundPicturesFolder;
             }
             catch (Exception ex)
@@ -103,12 +106,21 @@ namespace BackdropControl
             }
         }
 
-        private void LoadToPicturesPool()
+        private void LoadToImagePool()
         {
-            var filepaths = Directory.GetFiles(SelectedBackgroundPicturesFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
-            foreach (string elem in filepaths)
+            ImagePool.Clear();
+            if (DirectorySelectOption.Checked == true)
             {
-                PicturesPool.Add(elem);
+                var filepaths = Directory.GetFiles(SelectedBackgroundPicturesFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
+                foreach (string elem in filepaths)
+                {
+                    ImagePool.Add(elem);
+                } 
+            }
+
+            else if (PresetSettingSelectOption.Checked == true)
+            {
+                
             }
         }
 
@@ -139,7 +151,7 @@ namespace BackdropControl
                         LastSavedPreset.AddPresetEntry(PresetEntry);
                     }
 
-                    LastSavedSerializedData.LoadedSerializedPresets.Add(LastSavedPreset);
+                    LastSerializedData.LoadedSerializedPresets.Add(LastSavedPreset);
                     SharedObjects.ListOfLoadedPresets.Add(LoadedPreset);
                 }
             }
@@ -184,7 +196,7 @@ namespace BackdropControl
         {
             if (!Directory.Exists(SelectedBackgroundPicturesFolder))
             {
-                PicturesPool.Clear();
+                ImagePool.Clear();
                 LoadMainWallpaperSettings();
             }
             else
@@ -195,22 +207,22 @@ namespace BackdropControl
 
         private void TimelyWallpaperChange()
         {
-            if (PicturesPool.Count() != 0)
+            if (ImagePool.Count() != 0)
             {
-                if (iter == 0)
+                if (ImagePoolIndex == 0)
                 {
-                    SetBackgroundPicture(PicturesPool[0]);
-                    iter++;
+                    SetBackgroundPicture(ImagePool[0]);
+                    ImagePoolIndex++;
                 }
-                else if (iter < PicturesPool.Count())
+                else if (ImagePoolIndex < ImagePool.Count())
                 {
-                    SetBackgroundPicture(PicturesPool[iter]);
-                    iter++;
+                    SetBackgroundPicture(ImagePool[ImagePoolIndex]);
+                    ImagePoolIndex++;
                 }
                 else
                 {
-                    iter = 0;
-                    SetBackgroundPicture(PicturesPool[iter]);
+                    ImagePoolIndex = 0;
+                    SetBackgroundPicture(ImagePool[ImagePoolIndex]);
                 }
             }
         }
@@ -220,7 +232,7 @@ namespace BackdropControl
             System.Diagnostics.Debug.WriteLine("File: " + e.FullPath);
             string ext = Path.GetExtension(e.FullPath);
             if (ext == "png" || ext == "jpg" || ext == "jpeg")
-                PicturesPool.Add(e.FullPath);
+                ImagePool.Add(e.FullPath);
         }
 
         private void PictureCheck(string filepath)
@@ -232,7 +244,7 @@ namespace BackdropControl
             stream.Close();
             if (CheckPicture(fileBytes))
             {
-                PicturesPool.Add(filepath);
+                ImagePool.Add(filepath);
             }
         }
 
@@ -244,16 +256,16 @@ namespace BackdropControl
         private void watcher_Deleted(object sender, FileSystemEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("File deleted: {0}", e.Name);
-            PicturesPool.RemoveAt(PicturesPool.IndexOf(e.FullPath));
-            foreach (string s in PicturesPool)
+            ImagePool.RemoveAt(ImagePool.IndexOf(e.FullPath));
+            foreach (string s in ImagePool)
                 System.Diagnostics.Debug.WriteLine(s);
         }
 
         private void watcher_Renamed(object sender, RenamedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("FILE RENAME: {0} -> {1}", e.OldFullPath, e.FullPath);
-            PicturesPool[PicturesPool.IndexOf(e.OldFullPath)] = e.FullPath;
-            foreach (string s in PicturesPool)
+            ImagePool[ImagePool.IndexOf(e.OldFullPath)] = e.FullPath;
+            foreach (string s in ImagePool)
                 System.Diagnostics.Debug.WriteLine(s);
         }
 
@@ -298,11 +310,11 @@ namespace BackdropControl
             {
                 BackgroundChangeTimer.Enabled = true;     //change data only AFTER apply button is clicked
                 watcher.Path = SelectedBackgroundPicturesFolder;
-                PicturesPool.Clear();
+                ImagePool.Clear();
                 var filepaths = Directory.GetFiles(SelectedBackgroundPicturesFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
                 foreach (string elem in filepaths)
                 {
-                    PicturesPool.Add(elem);
+                    ImagePool.Add(elem);
                 }
                 LastUsedWallpaperDirectory = SelectedBackgroundPicturesFolder;
                 SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
@@ -327,6 +339,8 @@ namespace BackdropControl
                 this.ShowInTaskbar = false;
                 notifyIcon1.Visible = true;
                 this.Hide();
+
+                Application.Exit();
             }
         }
 
@@ -382,7 +396,7 @@ namespace BackdropControl
 
         private void greyOutMode1()
         {
-            radioButton1.Checked = false;
+            DirectorySelectOption.Checked = false;
             SelectedFolderLabel.Enabled = false;
             BGchange.Enabled = false;
             label2.Enabled = false;
@@ -393,33 +407,42 @@ namespace BackdropControl
             label3.Enabled = false;
             label4.Enabled = false;
 
-            radioButton2.Checked = true;
-            label5.Enabled = true;
-            comboBox1.Enabled = true;
+            PresetSettingSelectOption.Checked = true;
+            SelectedPresetLabel.Enabled = true;
+            MainSettingsPagePresetComboBox.Enabled = true;
             OpenPresetsSettingsButton.Enabled = true;
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void BackgroundOptionChanged(object sender, EventArgs e)
         {
-            if (radioButton1.Checked == true)
+            if (DirectorySelectOption.Checked == true)
                 greyOutMode2();
-            else if (radioButton1.Checked == false)
+            else if (DirectorySelectOption.Checked == false)
                 greyOutMode1();
             MainSettingsApplyButton.Enabled = true;
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void PresetUserSelectEvent(object sender, EventArgs e)
         {
-            if (radioButton2.Checked == true)
+            if (PresetSettingSelectOption.Checked == true)
                 greyOutMode1();
-            else if (radioButton2.Checked == false)
+            else if (PresetSettingSelectOption.Checked == false)
                 greyOutMode2();
             MainSettingsApplyButton.Enabled = true;
+
+            if (MainSettingsPagePresetComboBox.SelectedItem != null)
+            {
+                BackgroundChangeTimer.Stop();
+                BackgroundChangeTimer.Dispose();
+                ImagePoolIndex = 0;
+
+                SetTimerEvent(DateTime.Parse(SharedObjects.ListOfLoadedPresets[0].GetPresetEntries().ElementAt(0).GetTimeOfChangeString()));
+            }
         }
 
         private void greyOutMode2()
         {
-            radioButton1.Checked = true;
+            DirectorySelectOption.Checked = true;
             SelectedFolderLabel.Enabled = true;
             BGchange.Enabled = true;
             label2.Enabled = true;
@@ -430,16 +453,35 @@ namespace BackdropControl
             label3.Enabled = true;
             label4.Enabled = true;
 
-            radioButton2.Checked = false;
-            label5.Enabled = false;
-            comboBox1.Enabled = false;
+            PresetSettingSelectOption.Checked = false;
+            SelectedPresetLabel.Enabled = false;
+            MainSettingsPagePresetComboBox.Enabled = false;
             OpenPresetsSettingsButton.Enabled = false;
         }
 
         private void OpenPresetsSettingsEvent(object sender, EventArgs e)
         {
-            PresetsQuickSettings f2 = new PresetsQuickSettings();
-            f2.ShowDialog();
+            PresetSettingsWindow.ShowDialog();
+        }
+
+        private void PresetSettingsWindowClosed(object sender, EventArgs e)
+        {
+            MainSettingsPagePresetComboBox.Items.Clear();
+
+            foreach (BackgroundPreset preset in LastSerializedData.LoadedSerializedPresets)
+                MainSettingsPagePresetComboBox.Items.Add(preset.PresetName);
+        }
+
+        private void SetTimerEvent(DateTime PresetEntryTime)
+        {
+            BackgroundChangeTimer.Stop();
+            BackgroundChangeTimer.Dispose();
+
+            if (PresetEntryTime > DateTime.Now)
+                BackgroundChangeTimer.Interval = (PresetEntryTime.Second + (24 * 60 * 60)) - DateTime.Now.Second;
+            else
+                BackgroundChangeTimer.Interval = PresetEntryTime.Second - DateTime.Now.Second;
+            //checkpoint
         }
     }
 }

@@ -6,13 +6,25 @@ using System.Threading.Tasks;
 
 namespace BackdropControl.Resources
 {
-    public static class LastSavedSerializedData
+    public static class LastSerializedData
     {
         public static string MainWallpaperSettingsDirectory;
         public static TimeSpan MainWallpaperSettingsTimeOfChange;
-        public static List<BackgroundPreset> LoadedSerializedPresets;
 
-        static LastSavedSerializedData()
+        private static List<BackgroundPreset> _LoadedSerializedPresets;
+        public static List<BackgroundPreset> LoadedSerializedPresets
+        {
+            get
+            {
+                return _LoadedSerializedPresets;
+            }
+            set
+            {
+                _LoadedSerializedPresets = value;
+            }
+        }
+
+        static LastSerializedData()
         {
             MainWallpaperSettingsDirectory = string.Empty;
             MainWallpaperSettingsTimeOfChange = new TimeSpan();
