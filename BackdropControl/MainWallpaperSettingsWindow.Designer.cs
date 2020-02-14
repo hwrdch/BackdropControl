@@ -86,7 +86,7 @@ namespace BackdropControl
             // 
             // BackgroundChangeTimer
             // 
-            this.BackgroundChangeTimer.Tick += new System.EventHandler(this.DirectoryMoveToNextEvent);
+            this.BackgroundChangeTimer.Tick += new System.EventHandler(this.DirectoryOptionMoveToNextImage);
             // 
             // SelectedFolderLabel
             // 
@@ -264,7 +264,7 @@ namespace BackdropControl
             this.DirectorySelectOption.TabStop = true;
             this.DirectorySelectOption.Text = "Single Directory";
             this.DirectorySelectOption.UseVisualStyleBackColor = true;
-            this.DirectorySelectOption.CheckedChanged += new System.EventHandler(this.BackgroundOptionChanged);
+            this.DirectorySelectOption.CheckedChanged += new System.EventHandler(this.DirectoryUserSelectEvent);
             // 
             // PresetSettingSelectOption
             // 
