@@ -75,10 +75,10 @@ namespace BackdropControl
             // 
             // BGchange
             // 
-            this.BGchange.Location = new System.Drawing.Point(262, 58);
-            this.BGchange.Margin = new System.Windows.Forms.Padding(2);
+            this.BGchange.Location = new System.Drawing.Point(349, 71);
+            this.BGchange.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.BGchange.Name = "BGchange";
-            this.BGchange.Size = new System.Drawing.Size(22, 19);
+            this.BGchange.Size = new System.Drawing.Size(29, 23);
             this.BGchange.TabIndex = 0;
             this.BGchange.Text = "...";
             this.BGchange.UseVisualStyleBackColor = true;
@@ -92,10 +92,9 @@ namespace BackdropControl
             // 
             this.SelectedFolderLabel.AutoEllipsis = true;
             this.SelectedFolderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SelectedFolderLabel.Location = new System.Drawing.Point(66, 58);
-            this.SelectedFolderLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.SelectedFolderLabel.Location = new System.Drawing.Point(88, 71);
             this.SelectedFolderLabel.Name = "SelectedFolderLabel";
-            this.SelectedFolderLabel.Size = new System.Drawing.Size(192, 19);
+            this.SelectedFolderLabel.Size = new System.Drawing.Size(256, 23);
             this.SelectedFolderLabel.TabIndex = 1;
             this.SelectedFolderLabel.Text = "Path Directory";
             // 
@@ -115,52 +114,51 @@ namespace BackdropControl
             // 
             this.label2.AutoEllipsis = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(66, 85);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(88, 105);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(124, 18);
+            this.label2.Size = new System.Drawing.Size(165, 22);
             this.label2.TabIndex = 3;
             this.label2.Text = "Time Interval of Change";
             // 
             // numMin
             // 
-            this.numMin.Location = new System.Drawing.Point(319, 85);
-            this.numMin.Margin = new System.Windows.Forms.Padding(2);
+            this.numMin.Location = new System.Drawing.Point(425, 105);
+            this.numMin.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numMin.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numMin.Name = "numMin";
-            this.numMin.Size = new System.Drawing.Size(32, 20);
+            this.numMin.Size = new System.Drawing.Size(43, 22);
             this.numMin.TabIndex = 5;
             this.numMin.ValueChanged += new System.EventHandler(this.numMin_ValueChanged);
             // 
             // numHour
             // 
-            this.numHour.Location = new System.Drawing.Point(262, 85);
-            this.numHour.Margin = new System.Windows.Forms.Padding(2);
+            this.numHour.Location = new System.Drawing.Point(349, 105);
+            this.numHour.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numHour.Maximum = new decimal(new int[] {
             23,
             0,
             0,
             0});
             this.numHour.Name = "numHour";
-            this.numHour.Size = new System.Drawing.Size(32, 20);
+            this.numHour.Size = new System.Drawing.Size(43, 22);
             this.numHour.TabIndex = 6;
             this.numHour.ValueChanged += new System.EventHandler(this.numHour_ValueChanged);
             // 
             // numSec
             // 
-            this.numSec.Location = new System.Drawing.Point(385, 85);
-            this.numSec.Margin = new System.Windows.Forms.Padding(2);
+            this.numSec.Location = new System.Drawing.Point(513, 105);
+            this.numSec.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numSec.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numSec.Name = "numSec";
-            this.numSec.Size = new System.Drawing.Size(32, 20);
+            this.numSec.Size = new System.Drawing.Size(43, 22);
             this.numSec.TabIndex = 7;
             this.numSec.ValueChanged += new System.EventHandler(this.numSec_ValueChanged);
             // 
@@ -168,10 +166,9 @@ namespace BackdropControl
             // 
             this.label1.AutoEllipsis = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(296, 85);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(395, 105);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(18, 18);
+            this.label1.Size = new System.Drawing.Size(24, 22);
             this.label1.TabIndex = 8;
             this.label1.Text = "hr";
             // 
@@ -179,10 +176,9 @@ namespace BackdropControl
             // 
             this.label3.AutoEllipsis = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(354, 85);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Location = new System.Drawing.Point(472, 105);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(26, 18);
+            this.label3.Size = new System.Drawing.Size(35, 22);
             this.label3.TabIndex = 9;
             this.label3.Text = "min";
             // 
@@ -190,19 +186,18 @@ namespace BackdropControl
             // 
             this.label4.AutoEllipsis = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(422, 85);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Location = new System.Drawing.Point(563, 105);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(26, 18);
+            this.label4.Size = new System.Drawing.Size(35, 22);
             this.label4.TabIndex = 10;
             this.label4.Text = "sec";
             // 
             // MainSettingsApplyButton
             // 
-            this.MainSettingsApplyButton.Location = new System.Drawing.Point(331, 233);
-            this.MainSettingsApplyButton.Margin = new System.Windows.Forms.Padding(2);
+            this.MainSettingsApplyButton.Location = new System.Drawing.Point(441, 287);
+            this.MainSettingsApplyButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MainSettingsApplyButton.Name = "MainSettingsApplyButton";
-            this.MainSettingsApplyButton.Size = new System.Drawing.Size(61, 24);
+            this.MainSettingsApplyButton.Size = new System.Drawing.Size(81, 30);
             this.MainSettingsApplyButton.TabIndex = 12;
             this.MainSettingsApplyButton.Text = "Apply";
             this.MainSettingsApplyButton.UseVisualStyleBackColor = true;
@@ -222,19 +217,19 @@ namespace BackdropControl
             this.settingsStrip,
             this.exitStrip});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(117, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(132, 52);
             // 
             // settingsStrip
             // 
             this.settingsStrip.Name = "settingsStrip";
-            this.settingsStrip.Size = new System.Drawing.Size(116, 22);
+            this.settingsStrip.Size = new System.Drawing.Size(131, 24);
             this.settingsStrip.Text = "Settings";
             this.settingsStrip.Click += new System.EventHandler(this.settingsStrip_Click);
             // 
             // exitStrip
             // 
             this.exitStrip.Name = "exitStrip";
-            this.exitStrip.Size = new System.Drawing.Size(116, 22);
+            this.exitStrip.Size = new System.Drawing.Size(131, 24);
             this.exitStrip.Text = "Exit";
             this.exitStrip.Click += new System.EventHandler(this.exitStrip_Click);
             // 
@@ -248,83 +243,84 @@ namespace BackdropControl
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(396, 233);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
+            this.button1.Location = new System.Drawing.Point(528, 287);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(61, 24);
+            this.button1.Size = new System.Drawing.Size(81, 30);
             this.button1.TabIndex = 13;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.MainSettingsCancel);
             // 
-            // radioButton1
+            // DirectorySelectOption
             // 
             this.DirectorySelectOption.AutoSize = true;
             this.DirectorySelectOption.Checked = true;
-            this.DirectorySelectOption.Location = new System.Drawing.Point(35, 28);
-            this.DirectorySelectOption.Margin = new System.Windows.Forms.Padding(2);
-            this.DirectorySelectOption.Name = "radioButton1";
-            this.DirectorySelectOption.Size = new System.Drawing.Size(86, 17);
+            this.DirectorySelectOption.Location = new System.Drawing.Point(47, 34);
+            this.DirectorySelectOption.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.DirectorySelectOption.Name = "DirectorySelectOption";
+            this.DirectorySelectOption.Size = new System.Drawing.Size(129, 21);
             this.DirectorySelectOption.TabIndex = 14;
             this.DirectorySelectOption.TabStop = true;
             this.DirectorySelectOption.Text = "Single Directory";
             this.DirectorySelectOption.UseVisualStyleBackColor = true;
             this.DirectorySelectOption.CheckedChanged += new System.EventHandler(this.BackgroundOptionChanged);
             // 
-            // radioButton2
+            // PresetSettingSelectOption
             // 
             this.PresetSettingSelectOption.AutoSize = true;
-            this.PresetSettingSelectOption.Location = new System.Drawing.Point(35, 119);
-            this.PresetSettingSelectOption.Margin = new System.Windows.Forms.Padding(2);
-            this.PresetSettingSelectOption.Name = "radioButton2";
-            this.PresetSettingSelectOption.Size = new System.Drawing.Size(108, 17);
+            this.PresetSettingSelectOption.Location = new System.Drawing.Point(47, 146);
+            this.PresetSettingSelectOption.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.PresetSettingSelectOption.Name = "PresetSettingSelectOption";
+            this.PresetSettingSelectOption.Size = new System.Drawing.Size(139, 21);
             this.PresetSettingSelectOption.TabIndex = 15;
             this.PresetSettingSelectOption.TabStop = true;
             this.PresetSettingSelectOption.Text = "Custom Schedule";
             this.PresetSettingSelectOption.UseVisualStyleBackColor = true;
+            this.PresetSettingSelectOption.CheckedChanged += new EventHandler(this.PresetUserSelectEvent);
             // 
-            // label5
+            // SelectedPresetLabel
             // 
             this.SelectedPresetLabel.AutoSize = true;
+            this.SelectedPresetLabel.Enabled = false;
             this.SelectedPresetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SelectedPresetLabel.Location = new System.Drawing.Point(66, 153);
-            this.SelectedPresetLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.SelectedPresetLabel.Name = "label5";
-            this.SelectedPresetLabel.Size = new System.Drawing.Size(93, 15);
+            this.SelectedPresetLabel.Location = new System.Drawing.Point(88, 188);
+            this.SelectedPresetLabel.Name = "SelectedPresetLabel";
+            this.SelectedPresetLabel.Size = new System.Drawing.Size(112, 18);
             this.SelectedPresetLabel.TabIndex = 16;
             this.SelectedPresetLabel.Text = "Selected Preset";
-            this.SelectedPresetLabel.Enabled = false;
             // 
-            // comboBox1
+            // MainSettingsPagePresetComboBox
             // 
-            this.MainSettingsPagePresetComboBox.Location = new System.Drawing.Point(262, 153);
-            this.MainSettingsPagePresetComboBox.Margin = new System.Windows.Forms.Padding(2);
-            this.MainSettingsPagePresetComboBox.MaxDropDownItems = 10;
-            this.MainSettingsPagePresetComboBox.Name = "comboBox1";
-            this.MainSettingsPagePresetComboBox.Size = new System.Drawing.Size(156, 21);
-            this.MainSettingsPagePresetComboBox.TabIndex = 17;
+            this.MainSettingsPagePresetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MainSettingsPagePresetComboBox.Enabled = false;
-            this.MainSettingsPagePresetComboBox.SelectedValueChanged += new EventHandler(this.PresetComboBoxValueChangedEvent);
+            this.MainSettingsPagePresetComboBox.Location = new System.Drawing.Point(349, 188);
+            this.MainSettingsPagePresetComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MainSettingsPagePresetComboBox.Name = "MainSettingsPagePresetComboBox";
+            this.MainSettingsPagePresetComboBox.Size = new System.Drawing.Size(207, 24);
+            this.MainSettingsPagePresetComboBox.TabIndex = 17;
+            this.MainSettingsPagePresetComboBox.SelectedValueChanged += new System.EventHandler(this.PresetComboBoxValueChangedEvent);
             // 
             // OpenPresetsSettingsButton
             // 
+            this.OpenPresetsSettingsButton.Enabled = false;
             this.OpenPresetsSettingsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OpenPresetsSettingsButton.Location = new System.Drawing.Point(331, 177);
-            this.OpenPresetsSettingsButton.Margin = new System.Windows.Forms.Padding(2);
+            this.OpenPresetsSettingsButton.Location = new System.Drawing.Point(441, 218);
+            this.OpenPresetsSettingsButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OpenPresetsSettingsButton.Name = "OpenPresetsSettingsButton";
-            this.OpenPresetsSettingsButton.Size = new System.Drawing.Size(86, 23);
+            this.OpenPresetsSettingsButton.Size = new System.Drawing.Size(115, 28);
             this.OpenPresetsSettingsButton.TabIndex = 18;
             this.OpenPresetsSettingsButton.Text = "Edit Presets";
             this.OpenPresetsSettingsButton.UseVisualStyleBackColor = true;
-            this.OpenPresetsSettingsButton.Enabled = false;
             this.OpenPresetsSettingsButton.Click += new System.EventHandler(this.OpenPresetsSettingsEvent);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(0, 0);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 13);
+            this.label6.Size = new System.Drawing.Size(46, 17);
             this.label6.TabIndex = 19;
             this.label6.Text = "label6";
             this.label6.Visible = false;
@@ -332,18 +328,19 @@ namespace BackdropControl
             // StatusLabel
             // 
             this.StatusLabel.AutoSize = true;
-            this.StatusLabel.Location = new System.Drawing.Point(12, 259);
+            this.StatusLabel.Location = new System.Drawing.Point(16, 319);
+            this.StatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(35, 13);
+            this.StatusLabel.Size = new System.Drawing.Size(46, 17);
             this.StatusLabel.TabIndex = 20;
             this.StatusLabel.Text = "label7";
             this.StatusLabel.Visible = false;
             // 
             // MainWallpaperSettingsWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(488, 281);
+            this.ClientSize = new System.Drawing.Size(651, 346);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.OpenPresetsSettingsButton);
@@ -362,7 +359,7 @@ namespace BackdropControl
             this.Controls.Add(this.label2);
             this.Controls.Add(this.SelectedFolderLabel);
             this.Controls.Add(this.BGchange);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainWallpaperSettingsWindow";
@@ -375,6 +372,7 @@ namespace BackdropControl
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

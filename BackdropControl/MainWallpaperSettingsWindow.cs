@@ -120,7 +120,10 @@ namespace BackdropControl
 
             else if (PresetSettingSelectOption.Checked == true)
             {
-                
+                foreach (BackgroundPresetEntry elem in SelectedPreset.GetPresetEntries())
+                {
+                    ImagePool.Add(elem.DirectoryPath);
+                }
             }
         }
 
@@ -195,7 +198,7 @@ namespace BackdropControl
 
         private void DirectoryMoveToNextEvent(object sender, EventArgs e)
         {
-            if (DirectorySelectOption.Checked == true)
+            if (DirectorySelectOption.Checked == true || (!DirectorySelectOption.Checked && MainSettingsPagePresetComboBox.SelectedItem == null))
             {
                 if (!Directory.Exists(SelectedBackgroundPicturesFolder))
                 {
@@ -230,20 +233,23 @@ namespace BackdropControl
                 {
                     SetBackgroundPicture(ImagePool[0]);
                     ImagePoolIndex++;
-                    SetPresetTimerEvent(DateTime.Parse(SelectedPreset.GetPresetEntries().ElementAt(ImagePoolIndex).GetTimeOfChangeString())) ;
                 }
                 else if (ImagePoolIndex < ImagePool.Count())
                 {
                     SetBackgroundPicture(ImagePool[ImagePoolIndex]);
                     ImagePoolIndex++;
-                    SetPresetTimerEvent(DateTime.Parse(SelectedPreset.GetPresetEntries().ElementAt(ImagePoolIndex).GetTimeOfChangeString()));
                 }
                 else
                 {
                     ImagePoolIndex = 0;
                     SetBackgroundPicture(ImagePool[ImagePoolIndex]);
-                    SetPresetTimerEvent(DateTime.Parse(SelectedPreset.GetPresetEntries().ElementAt(0).GetTimeOfChangeString()));
                 }
+
+                if (ImagePoolIndex > ImagePool.Count())
+                    SetPresetTimerEvent(SelectedPreset.GetPresetEntries().ElementAt(0).TimeOfChange);
+                else
+                    SetPresetTimerEvent(SelectedPreset.GetPresetEntries().ElementAt(ImagePoolIndex).TimeOfChange);
+
             }
         }
 
@@ -309,36 +315,56 @@ namespace BackdropControl
 
         private void SerializeMainSettings(object sender, EventArgs e)
         {
-            var doc = XElement.Load(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\MainWallpaperSettings.xml");
-            int intervalSum = (3600000 * Convert.ToInt32(numHour.Value)) + (60000 * Convert.ToInt32(numMin.Value)) + (1000 * Convert.ToInt32(numSec.Value));
-            if (intervalSum < 10000)
+            if (DirectorySelectOption.Checked)
             {
-                MessageBox.Show("Time Interval cannot be less than 10 seconds");
-                numSec.Value = 10;
-            }
-            else
-            {
-                StatusLabel.Visible = true;
-                StatusLabel.Text = "Saving...";
-                doc.Element("TimeInterval").Value = numHour.Value.ToString() + ":" + numMin.Value.ToString() + ":" + numSec.Value.ToString();
-                doc.Element("Directory").Value = SelectedBackgroundPicturesFolder;
-                doc.Save(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\MainWallpaperSettings.xml");
-                this.BackgroundChangeTimer.Interval = intervalSum;
+                var doc = XElement.Load(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\MainWallpaperSettings.xml");
+                int intervalSum = (3600000 * Convert.ToInt32(numHour.Value)) + (60000 * Convert.ToInt32(numMin.Value)) + (1000 * Convert.ToInt32(numSec.Value));
+                if (intervalSum < 10000)
+                {
+                    MessageBox.Show("Time Interval cannot be less than 10 seconds");
+                    numSec.Value = 10;
+                }
+                else
+                {
+                    StatusLabel.Visible = true;
+                    StatusLabel.Text = "Saving...";
+                    doc.Element("TimeInterval").Value = numHour.Value.ToString() + ":" + numMin.Value.ToString() + ":" + numSec.Value.ToString();
+                    doc.Element("Directory").Value = SelectedBackgroundPicturesFolder;
+                    doc.Save(SharedObjects.DEFAULT_APP_LOCATION_PATH + "\\MainWallpaperSettings.xml");
+                    this.BackgroundChangeTimer.Interval = intervalSum;
+                }
+
+                if (SelectedBackgroundPicturesFolder != LastUsedWallpaperDirectory)
+                {
+                    BackgroundChangeTimer.Enabled = true;
+                    watcher.Path = SelectedBackgroundPicturesFolder;
+                    ImagePool.Clear();
+                    var filepaths = Directory.GetFiles(SelectedBackgroundPicturesFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
+                    foreach (string elem in filepaths)
+                    {
+                        ImagePool.Add(elem);
+                    }
+                    LastUsedWallpaperDirectory = SelectedBackgroundPicturesFolder;
+                    SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
+                }
             }
 
-            if (SelectedBackgroundPicturesFolder != LastUsedWallpaperDirectory)
+            else
             {
-                BackgroundChangeTimer.Enabled = true;     //change data only AFTER apply button is clicked
-                watcher.Path = SelectedBackgroundPicturesFolder;
-                ImagePool.Clear();
-                var filepaths = Directory.GetFiles(SelectedBackgroundPicturesFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
-                foreach (string elem in filepaths)
+                if (MainSettingsPagePresetComboBox.SelectedItem != null)
                 {
-                    ImagePool.Add(elem);
+                    BackgroundPresetEntry EarliestEntry = SelectedPreset.GetPresetEntries().FirstOrDefault(n => n.TimeOfChange.TotalSeconds > DateTime.Now.TimeOfDay.TotalSeconds);
+                    if (EarliestEntry == null)
+                    {
+                        EarliestEntry = SelectedPreset.GetPresetEntries()[0];
+                        ImagePoolIndex = 0;
+                    }
+                    else
+                        ImagePoolIndex = SelectedPreset.GetPresetEntries().IndexOf(EarliestEntry);
+                    SetPresetTimerEvent(EarliestEntry.TimeOfChange);
                 }
-                LastUsedWallpaperDirectory = SelectedBackgroundPicturesFolder;
-                SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
             }
+
             MainSettingsApplyButton.Enabled = false;
             StatusLabel.Text = "Settings Saved.";
         }
@@ -468,15 +494,6 @@ namespace BackdropControl
             else if (PresetSettingSelectOption.Checked == false)
                 greyOutMode2();
             MainSettingsApplyButton.Enabled = true;
-
-            if (MainSettingsPagePresetComboBox.SelectedItem != null)
-            {
-                BackgroundChangeTimer.Stop();
-                BackgroundChangeTimer.Dispose();
-                ImagePoolIndex = 0;
-
-                SetPresetTimerEvent(DateTime.Parse(SharedObjects.ListOfLoadedPresets[0].GetPresetEntries().ElementAt(0).GetTimeOfChangeString()));
-            }
         }
 
         private void OpenPresetsSettingsEvent(object sender, EventArgs e)
@@ -492,33 +509,39 @@ namespace BackdropControl
                 MainSettingsPagePresetComboBox.Items.Add(preset.PresetName);
         }
 
-        private void SetPresetTimerEvent(DateTime PresetEntryTime)
+        private void SetPresetTimerEvent(TimeSpan PresetEntryTime)
         {
             BackgroundChangeTimer.Stop();
-            BackgroundChangeTimer.Dispose();
-
-            if (PresetEntryTime > DateTime.Now)
-                BackgroundChangeTimer.Interval = (PresetEntryTime.Second + (24 * 60 * 60)) - DateTime.Now.Second;
+            if (PresetEntryTime.TotalSeconds < DateTime.Now.TimeOfDay.TotalSeconds)
+            {
+                BackgroundChangeTimer.Interval = (Convert.ToInt32(PresetEntryTime.TotalSeconds) + (24 * 60 * 60)) - Convert.ToInt32(DateTime.Now.TimeOfDay.TotalSeconds);
+            }
             else
-                BackgroundChangeTimer.Interval = PresetEntryTime.Second - DateTime.Now.Second;
+            {
+                BackgroundChangeTimer.Interval = Convert.ToInt32(PresetEntryTime.TotalSeconds - DateTime.Now.TimeOfDay.TotalSeconds);
+            }
+
+            BackgroundChangeTimer.Start();
         }
 
         private void PresetComboBoxValueChangedEvent(object sender, EventArgs e)
         {
-            BackgroundChangeTimer.Stop();
-            BackgroundChangeTimer.Dispose();
-
-            SelectedPreset = LastSerializedData.LoadedSerializedPresets.FirstOrDefault(p => p.PresetName == MainSettingsPagePresetComboBox.SelectedItem.ToString());
-            ImagePool.Clear();
-
-            ImagePoolIndex = 0;
-
-            foreach (BackgroundPresetEntry entry in SelectedPreset.GetPresetEntries())
+            if (MainSettingsPagePresetComboBox.SelectedItem != null)
             {
-                if (DateTime.Now < DateTime.Parse(entry.GetTimeOfChangeString()))
-                    ImagePoolIndex++;
-                ImagePool.Add(entry.DirectoryPath);
+                SelectedPreset = LastSerializedData.LoadedSerializedPresets.FirstOrDefault(p => p.PresetName == MainSettingsPagePresetComboBox.SelectedItem.ToString());
+                ImagePool.Clear();
+
+                ImagePoolIndex = 0;
+
+                foreach (BackgroundPresetEntry entry in SelectedPreset.GetPresetEntries())
+                {
+                    if (DateTime.Now < DateTime.Parse(entry.GetTimeOfChangeString()))
+                        ImagePoolIndex++;
+                    ImagePool.Add(entry.DirectoryPath);
+                } 
             }
+
+            MainSettingsApplyButton.Enabled = true;
         }
     }
 }

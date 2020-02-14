@@ -98,7 +98,7 @@ namespace BackdropControl
             this.ApplyButton.Text = "Apply";
             this.ApplyButton.Enabled = false;
             this.ApplyButton.UseVisualStyleBackColor = true;
-            this.ApplyButton.Click += new EventHandler(this.SerializePresetSettings);
+            this.ApplyButton.Click += new EventHandler(this.ApplyButtonPressedEvent);
             // 
             // label1
             // 

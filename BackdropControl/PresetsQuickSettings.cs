@@ -207,7 +207,13 @@ namespace BackdropControl
 
         private void RightClick1DeletePreset(object sender, EventArgs e)
         {
+            SharedObjects.ListOfLoadedPresets.Remove
+                (SharedObjects.ListOfLoadedPresets.FirstOrDefault(item => item.PresetName == HighlightedPresetName));
+            SelectedPresetListView.Items.Clear();
+            CurrentListViewPresetEntries.Clear();
             PresetListBox.Items.RemoveAt(PresetListBox.SelectedIndex);
+
+            ApplyButton.Enabled = true;
         }
 
         private void SelectedPresetListViewRightClick(object sender, MouseEventArgs e)
@@ -281,7 +287,7 @@ namespace BackdropControl
                 CurrentListViewPresetEntries[SelectedPresetListView.SelectedIndices[0]] = bpentry;
                 BGPreview.ImageLocation = bpentry.DirectoryPath;
 
-                int x = SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == PresetListBox.SelectedItem.ToString()).EditPresetEntry(bpentry, SelectedPresetListView.SelectedIndices[0]);
+                int x = SharedObjects.ListOfLoadedPresets.First(b => b.PresetName == HighlightedPresetName).EditPresetEntry(bpentry, SelectedPresetListView.SelectedIndices[0]);
                 ApplyButton.Enabled = true;
             }
         }
@@ -319,7 +325,7 @@ namespace BackdropControl
             ApplyButton.Enabled = true;
         }
 
-        private void SerializePresetSettings(object sender, EventArgs e)
+        private void ApplyButtonPressedEvent(object sender, EventArgs e)
         {
             SharedObjects.DEFAULT_APP_LOCATION_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl");
             if (!Directory.Exists(SharedObjects.DEFAULT_APP_LOCATION_PATH))
@@ -339,7 +345,10 @@ namespace BackdropControl
             }
 
             foreach (string s in PresetsToBeRemoved)
+            {
+                File.Delete(Path.Combine(SharedObjects.DEFAULT_PRESET_PATH,LastSerializedData.LoadedSerializedPresets.FirstOrDefault(p => p.PresetID == s).PresetName + ".xml"));
                 LastSerializedData.LoadedSerializedPresets.RemoveAll(p => p.PresetID == s);
+            }
             #endregion Remove unnecessary presets
 
             foreach (BackgroundPreset CurrentPreset in SharedObjects.ListOfLoadedPresets)
@@ -353,7 +362,6 @@ namespace BackdropControl
 
                 else
                 {
-                    File.WriteAllText(XMLFilePath, "");
                     if (!LastSavedPresetIDs.Contains(CurrentPreset.PresetID))
                     {
                         LastSerializedData.LoadedSerializedPresets.Add(CurrentPreset);
@@ -361,14 +369,15 @@ namespace BackdropControl
                     }
                     else
                     {
-                        #region Edit common presets
+                        #region Edit common preset entries
                         List<string> LastSavedEntryIDs = CurrentPreset.PresetEntries.Select(listentry => listentry.EntryID).ToList();
 
                         #region Remove unnecessary entries
                         List<string> PresetEntriesToBeRemoved = new List<string>();
-                        foreach (BackgroundPresetEntry entry in CurrentPreset.PresetEntries)
+                        List<string> CurrentPresetEntryIDs = CurrentPreset.GetPresetEntries().Select(c => c.EntryID).ToList();
+                        foreach (BackgroundPresetEntry entry in LastSerializedData.LoadedSerializedPresets.FirstOrDefault(ent => ent.PresetName == CurrentPreset.PresetName).GetPresetEntries())
                         {
-                            if (!CurrentPresetIDs.Contains(entry.EntryID))
+                            if (!CurrentPresetEntryIDs.Contains(entry.EntryID))
                                 PresetEntriesToBeRemoved.Add(entry.EntryID);
                         }
                         foreach (string s in PresetEntriesToBeRemoved)
@@ -377,7 +386,8 @@ namespace BackdropControl
                         }
                         #endregion
 
-                        List<string> PresetEntriesToBeAdded = LastSavedEntryIDs.Except(CurrentPreset.PresetEntries.Select(s => s.EntryID).ToList()).ToList();
+                        List<string> PresetEntriesToBeAdded = LastSavedEntryIDs.Except(LastSerializedData.LoadedSerializedPresets.FirstOrDefault
+                            (ent => ent.PresetName == CurrentPreset.PresetName).GetPresetEntries().Select(s => s.EntryID).ToList()).ToList();
                         foreach (string s in PresetEntriesToBeAdded)
                         {
                             LastSerializedData.LoadedSerializedPresets.FirstOrDefault(item => item.PresetID == CurrentPreset.PresetID)
@@ -385,9 +395,12 @@ namespace BackdropControl
                         }
                         #endregion
                     }
+                    File.WriteAllText(XMLFilePath, "");
                     WriteToPresetFile(XMLFilePath, CurrentPreset);
                 }
             }
+
+            ApplyButton.Enabled = false;
         }
 
         private void WriteToPresetFile(string XMLFilePath, BackgroundPreset CurrentPreset)
