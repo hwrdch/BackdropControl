@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using BackdropControl.Resources;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Threading.Tasks;
 
 namespace BackdropControl
 {
@@ -190,7 +191,7 @@ namespace BackdropControl
 
             SharedObjects.SELECTED_MAIN_SETTINGS_PATH = SelectedBackgroundPicturesFolder;
         }
-        private void SetBackgroundPicture(string file)
+        private async Task SetBackgroundPicture(string file)
         {
             const int SET_DESKTOP_BACKGROUND = 20;
             const int UPDATE_INI_FILE = 1;
@@ -221,18 +222,18 @@ namespace BackdropControl
                     {
                         if (ImagePoolIndex == 0)
                         {
-                            SetBackgroundPicture(ImagePool[0]);
+                            Task.Run(() => SetBackgroundPicture(ImagePool[0]));
                             ImagePoolIndex++;
                         }
                         else if (ImagePoolIndex < ImagePool.Count())
                         {
-                            SetBackgroundPicture(ImagePool[ImagePoolIndex]);
+                            Task.Run(() => SetBackgroundPicture(ImagePool[ImagePoolIndex]));
                             ImagePoolIndex++;
                         }
                         else
                         {
                             ImagePoolIndex = 0;
-                            SetBackgroundPicture(ImagePool[ImagePoolIndex]);
+                            Task.Run(() => SetBackgroundPicture(ImagePool[ImagePoolIndex]));
                         }
                     }
                 }
@@ -244,7 +245,7 @@ namespace BackdropControl
             double dt = QueuedEntry.TimeOfChange.TotalSeconds;
             int currentindex = SelectedPreset.PresetEntries.IndexOf(QueuedEntry);
 
-            SetBackgroundPicture(QueuedEntry.DirectoryPath);
+            Task.Run(() => SetBackgroundPicture(QueuedEntry.DirectoryPath));
             if (currentindex == SelectedPreset.PresetEntries.Count - 1)
             {
                 QueuedEntry = SelectedPreset.PresetEntries[0];
@@ -254,7 +255,7 @@ namespace BackdropControl
                 QueuedEntry = SelectedPreset.GetPresetEntries()[currentindex + 1];
             }
             
-            SetPresetTimerEvent(QueuedEntry.TimeOfChange.TotalSeconds, dt);
+            Task.Run(() => SetPresetTimerEvent(QueuedEntry.TimeOfChange.TotalSeconds, dt));
         }
 
         private void PictureCheck(string filepath)
@@ -525,7 +526,7 @@ namespace BackdropControl
             MainSettingsPagePresetComboBox.SelectedItem = s;
         }
 
-        private void SetPresetTimerEvent(double PresetEntryTime, double DateTimeNow)
+        private async Task SetPresetTimerEvent(double PresetEntryTime, double DateTimeNow)
         {
             BackgroundChangeTimer.Stop();
             if (PresetEntryTime < DateTimeNow)
@@ -542,16 +543,6 @@ namespace BackdropControl
 
         private void PresetComboBoxValueChangedEvent(object sender, EventArgs e)
         {
-            //if (MainSettingsPagePresetComboBox.SelectedItem != null)
-            //{
-            //    SelectedPreset = LastSerializedData.LoadedSerializedPresets.FirstOrDefault(p => p.PresetName == MainSettingsPagePresetComboBox.SelectedItem.ToString());
-            //    QueuedEntry = SelectedPreset.GetPresetEntries().FirstOrDefault(n => n.TimeOfChange.TotalSeconds > DateTime.Now.TimeOfDay.TotalSeconds);
-            //    if (QueuedEntry == null)
-            //    {
-            //        QueuedEntry = SelectedPreset.GetPresetEntries()[0];
-            //    }
-            //}
-
             MainSettingsApplyButton.Enabled = true;
         }
     }

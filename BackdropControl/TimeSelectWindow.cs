@@ -89,5 +89,6 @@ namespace BackdropControl
         {
             TimeOfChange = TimeSpan.Parse(HRUpDown.Value.ToString() + ":" + MINUpDown.Value.ToString() + ":" + SECUpDown.Value.ToString());
         }
+
     }
 }
