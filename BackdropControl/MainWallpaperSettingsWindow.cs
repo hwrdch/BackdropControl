@@ -318,7 +318,7 @@ namespace BackdropControl
             notifyIcon1.Visible = false;
         }
 
-        private void SerializeMainSettings(object sender, EventArgs e)
+        private void MainPageApplyButtonClick(object sender, EventArgs e)
         {
             if (DirectorySelectOption.Checked)
             {

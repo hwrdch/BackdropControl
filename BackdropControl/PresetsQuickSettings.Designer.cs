@@ -98,7 +98,7 @@ namespace BackdropControl
             this.ApplyButton.Text = "Apply";
             this.ApplyButton.Enabled = false;
             this.ApplyButton.UseVisualStyleBackColor = true;
-            this.ApplyButton.Click += new EventHandler(this.ApplyButtonPressedEvent);
+            this.ApplyButton.Click += new EventHandler(this.PresetPageApplyButtonPressed);
             // 
             // label1
             // 
@@ -205,6 +205,7 @@ namespace BackdropControl
             this.AddNewPresetTextBox.TabIndex = 11;
             this.AddNewPresetTextBox.Visible = false;
             this.AddNewPresetTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddNewPresetName);
+            this.AddNewPresetTextBox.LostFocus += new EventHandler(this.RemoveTextBox);
             // 
             // EditPresetMenu
             // 

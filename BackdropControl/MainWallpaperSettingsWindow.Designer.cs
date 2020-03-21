@@ -201,7 +201,7 @@ namespace BackdropControl
             this.MainSettingsApplyButton.TabIndex = 12;
             this.MainSettingsApplyButton.Text = "Apply";
             this.MainSettingsApplyButton.UseVisualStyleBackColor = true;
-            this.MainSettingsApplyButton.Click += new System.EventHandler(this.SerializeMainSettings);
+            this.MainSettingsApplyButton.Click += new System.EventHandler(this.MainPageApplyButtonClick);
             // 
             // notifyIcon1
             // 

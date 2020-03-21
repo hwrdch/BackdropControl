@@ -140,7 +140,12 @@ namespace BackdropControl
 
             AddNewPresetTextBox.Text = string.Empty;
         }
-
+        
+        private void RemoveTextBox(object sender, EventArgs e)
+        {
+            AddNewPresetTextBox.Text = "";
+            AddNewPresetTextBox.Visible = false;
+        }
 
         private void AddNewPresetName(object sender, KeyEventArgs e)
         {
@@ -156,6 +161,7 @@ namespace BackdropControl
 
                     SharedObjects.ListOfLoadedPresets.Add(bp);
                     HighlightedPresetName = AddNewPresetTextBox.Text;
+
                     PresetListBox.Items.Add(bp);
 
                     AddNewPresetTextBox.Text = string.Empty;
@@ -166,6 +172,12 @@ namespace BackdropControl
                 {
                     AddNewPresetTextBox.Visible = false;
                 }
+            }
+
+            else if (e.KeyCode == Keys.Escape)
+            {
+                AddNewPresetTextBox.Text = "";
+                AddNewPresetTextBox.Visible = false;
             }
         }
         private void RenamePresetName(object sender, KeyEventArgs e)
@@ -260,7 +272,7 @@ namespace BackdropControl
                 ListViewItem item = new ListViewItem(bpentry.PictureFileName);
                 item.SubItems.Add(bpentry.GetTimeOfChangeString());
 
-                int AddedPresetIndex = SharedObjects.ListOfLoadedPresets.First(s => s.PresetName == ((BackgroundPreset) PresetListBox.SelectedItem).PresetName).InsertPresetEntry(bpentry);
+                int AddedPresetIndex = SharedObjects.ListOfLoadedPresets.FirstOrDefault(s => s.PresetName == ((BackgroundPreset) PresetListBox.SelectedItem).PresetName).InsertPresetEntry(bpentry);
                 SelectedPresetListView.Items.Insert(AddedPresetIndex, item);
                 CurrentListViewPresetEntries.Insert(AddedPresetIndex, bpentry);
 
@@ -325,7 +337,7 @@ namespace BackdropControl
             ApplyButton.Enabled = true;
         }
 
-        private void ApplyButtonPressedEvent(object sender, EventArgs e)
+        private void PresetPageApplyButtonPressed(object sender, EventArgs e)
         {
             SharedObjects.DEFAULT_APP_LOCATION_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackdropControl");
             if (!Directory.Exists(SharedObjects.DEFAULT_APP_LOCATION_PATH))
@@ -354,7 +366,7 @@ namespace BackdropControl
             foreach (BackgroundPreset CurrentPreset in SharedObjects.ListOfLoadedPresets)
             {
                 string XMLFilePath = Path.Combine(SharedObjects.DEFAULT_PRESET_PATH, CurrentPreset.PresetName + ".xml");
-
+                
                 if (!File.Exists(XMLFilePath))
                 {
                     WriteToPresetFile(XMLFilePath, CurrentPreset);
