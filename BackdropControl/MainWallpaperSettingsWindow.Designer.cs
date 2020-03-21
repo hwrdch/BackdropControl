@@ -44,7 +44,7 @@ namespace BackdropControl
             this.BGchange = new System.Windows.Forms.Button();
             this.BackgroundChangeTimer = new System.Windows.Forms.Timer(this.components);
             this.SelectedFolderLabel = new System.Windows.Forms.Label();
-            this.watcher = new System.IO.FileSystemWatcher();
+            this.DirectoryOptionFileWatcher = new System.IO.FileSystemWatcher();
             this.label2 = new System.Windows.Forms.Label();
             this.numMin = new System.Windows.Forms.NumericUpDown();
             this.numHour = new System.Windows.Forms.NumericUpDown();
@@ -66,7 +66,7 @@ namespace BackdropControl
             this.OpenPresetsSettingsButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.watcher)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DirectoryOptionFileWatcher)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHour)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSec)).BeginInit();
@@ -100,15 +100,15 @@ namespace BackdropControl
             // 
             // watcher
             // 
-            this.watcher.EnableRaisingEvents = true;
-            this.watcher.NotifyFilter = ((System.IO.NotifyFilters)((((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.DirectoryName) 
+            this.DirectoryOptionFileWatcher.EnableRaisingEvents = true;
+            this.DirectoryOptionFileWatcher.NotifyFilter = ((System.IO.NotifyFilters)((((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.DirectoryName) 
             | System.IO.NotifyFilters.LastWrite) 
             | System.IO.NotifyFilters.LastAccess)));
-            this.watcher.SynchronizingObject = this;
-            this.watcher.Changed += new System.IO.FileSystemEventHandler(this.watcher_Changed);
-            this.watcher.Created += new System.IO.FileSystemEventHandler(this.watcher_Created);
-            this.watcher.Deleted += new System.IO.FileSystemEventHandler(this.watcher_Deleted);
-            this.watcher.Renamed += new System.IO.RenamedEventHandler(this.watcher_Renamed);
+            this.DirectoryOptionFileWatcher.SynchronizingObject = this;
+            this.DirectoryOptionFileWatcher.Changed += new System.IO.FileSystemEventHandler(this.DirectoryFilesChanged);
+            this.DirectoryOptionFileWatcher.Created += new System.IO.FileSystemEventHandler(this.DirectoryFilesCreated);
+            this.DirectoryOptionFileWatcher.Deleted += new System.IO.FileSystemEventHandler(this.DirectoryFilesDeleted);
+            this.DirectoryOptionFileWatcher.Renamed += new System.IO.RenamedEventHandler(this.DirectoryFilesRenamed);
             // 
             // label2
             // 
@@ -365,7 +365,7 @@ namespace BackdropControl
             this.Name = "MainWallpaperSettingsWindow";
             this.Text = "Wallpaper Changer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.closeForm);
-            ((System.ComponentModel.ISupportInitialize)(this.watcher)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DirectoryOptionFileWatcher)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHour)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSec)).EndInit();
@@ -379,7 +379,7 @@ namespace BackdropControl
         private System.Windows.Forms.Button BGchange;
         private System.Windows.Forms.Timer BackgroundChangeTimer;
         private System.Windows.Forms.Label SelectedFolderLabel;
-        private System.IO.FileSystemWatcher watcher;
+        private System.IO.FileSystemWatcher DirectoryOptionFileWatcher;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;

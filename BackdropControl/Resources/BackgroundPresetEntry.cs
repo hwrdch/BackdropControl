@@ -21,14 +21,22 @@ namespace BackdropControl.Resources
             _DirectoryPath = path;
             TimeOfChange = dt;
             _PictureFileName = Path.GetFileName(path);
+
+            ImageWatcher.Path = DirectoryPath;
+            ImageWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
         }
-        public BackgroundPresetEntry (string path, TimeSpan dt, string id)
+        public BackgroundPresetEntry(string path, TimeSpan dt, string id)
         {
             _DirectoryPath = path;
             TimeOfChange = dt;
             _PictureFileName = Path.GetFileName(path);
             EntryID = id;
+
+            ImageWatcher.Path = DirectoryPath;
+            ImageWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
         }
+
+        private FileSystemWatcher ImageWatcher;
 
         public string EntryID;
 
@@ -46,6 +54,7 @@ namespace BackdropControl.Resources
             set { 
                 _DirectoryPath = value;
                 _PictureFileName = Path.GetFileName(value);
+                ImageWatcher.Path = value;
             }
         }
 
@@ -53,14 +62,7 @@ namespace BackdropControl.Resources
         public TimeSpan TimeOfChange
         {
             get { return _TimeOfChange; }
-            set { _TimeOfChange = value; TotalSeconds = value.TotalSeconds; }
-        }
-
-        private double _TotalSeconds;
-        public double TotalSeconds
-        {
-            get { return _TotalSeconds; }
-            set { _TotalSeconds = value; }
+            set { _TimeOfChange = value; }
         }
 
         public string GetPresetEntryFileName()

@@ -103,7 +103,7 @@ namespace BackdropControl
                             (Convert.ToDouble(this.numMin.Value) * 60) +
                                 (Convert.ToDouble(this.numSec.Value)));
 
-                    watcher.Path = SelectedBackgroundPicturesFolder;
+                    DirectoryOptionFileWatcher.Path = SelectedBackgroundPicturesFolder;
                     this.SelectedFolderLabel.Text = SelectedBackgroundPicturesFolder;
                 }
 
@@ -271,7 +271,7 @@ namespace BackdropControl
             }
         }
 
-        private void watcher_Created(object sender, FileSystemEventArgs e)
+        private void DirectoryFilesCreated(object sender, FileSystemEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("File: " + e.FullPath);
             string ext = Path.GetExtension(e.FullPath);
@@ -279,12 +279,12 @@ namespace BackdropControl
                 ImagePool.Add(e.FullPath);
         }
 
-        private void watcher_Changed(object sender, FileSystemEventArgs e)
+        private void DirectoryFilesChanged(object sender, FileSystemEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("FILE CHANGE: ", e.FullPath);
         }
 
-        private void watcher_Deleted(object sender, FileSystemEventArgs e)
+        private void DirectoryFilesDeleted(object sender, FileSystemEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("File deleted: {0}", e.Name);
             ImagePool.RemoveAt(ImagePool.IndexOf(e.FullPath));
@@ -292,7 +292,7 @@ namespace BackdropControl
                 System.Diagnostics.Debug.WriteLine(s);
         }
 
-        private void watcher_Renamed(object sender, RenamedEventArgs e)
+        private void DirectoryFilesRenamed(object sender, RenamedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("FILE RENAME: {0} -> {1}", e.OldFullPath, e.FullPath);
             ImagePool[ImagePool.IndexOf(e.OldFullPath)] = e.FullPath;
@@ -342,7 +342,7 @@ namespace BackdropControl
                 if (SelectedBackgroundPicturesFolder != LastUsedWallpaperDirectory)
                 {
                     BackgroundChangeTimer.Enabled = true;
-                    watcher.Path = SelectedBackgroundPicturesFolder;
+                    DirectoryOptionFileWatcher.Path = SelectedBackgroundPicturesFolder;
                     ImagePool.Clear();
                     var filepaths = Directory.GetFiles(SelectedBackgroundPicturesFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.EndsWith(".jpeg") || s.EndsWith(".jpg") || s.EndsWith(".png"));
                     foreach (string elem in filepaths)
